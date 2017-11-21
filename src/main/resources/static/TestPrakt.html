@@ -35,6 +35,13 @@
                     </select>
                 </div>
             </li>
+            <li><a data-toggle="collapse" data-target="#groupContainer" href="#">Group by</a>
+                <div class="collapse" id="groupContainer">
+                    <select class="form-control" id="groupType">
+                        <option value="Category">Category</option>
+                    </select>
+                </div>
+            </li>
             <li>
                 <button type="button" id="btnApply" class="btn btn-success form-control">Apply</button>
             </li>
@@ -47,54 +54,8 @@
     <div id="myDiv"></div>
     <script type="text/javascript">
         var myPlot = document.getElementById('myDiv');
-        var databaseObj = [
-                [
-                {
-                    category: "Enterpreneurship"
-                    , text: "Die Geschichte meines ersten eigenen Unternehmens"
-                }
-                , {
-                    category: "Enterpreneurship"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }
-                , {
-                    category: "Enterpreneurship"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }, {
-                    category: "Enterpreneurship"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }
-                ], [
-                {
-                    category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }
-                , {
-                    category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }
-                , {
-                    category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }, {
-                    category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }
-                , {
-                    category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }
-                , {
-                    category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }, {
-                    category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
-                }
-                ]
-            ];
         $(document).ready(function () {
-            display(databaseObj);
+            display(groupByCategory(getAllPosts()), false);
         });
         $("#defaultView").click(function () {
             location.reload();
@@ -112,54 +73,56 @@
         });
         $("#btnApply").click(function () {
             var selection = $("#filterType :selected").text();
-            var filtered = [[]];
+            var filtered = {};
             if (selection == "Category") {
+                var grouped = groupByCategory();
                 var cat = $("#categorySelection :selected").text();
-                $.each(databaseObj, function (idx, d1) {
-                    $.each(d1, function (idx, obj) {
-                        if (obj.category == cat) {
-                            filtered[0].push(obj)
-                        };
-                    })
-                })
+                filtered[cat] = [];
+                $.map(grouped, function (value, key) {
+                    if (key == cat) filtered[cat] = value;
+                });
             }
-            console.log(filtered);
-            display(filtered);
+            display(filtered, true);
         });
 
-        function display(databaseObj) {
+        function display(databaseObj, grouped) {
             Plotly.purge(myDiv);
             var data = [];
             var alpha = 2;
-            for (i = 0; i < databaseObj.length; i++) {
-                var N = databaseObj[i].length;
-                var b = Math.round(alpha * Math.sqrt(N));
-                var phi = (Math.sqrt(5) + 1) / 2;
+            console.log(databaseObj);
+            var globalIdx = 1;
+            $.each(databaseObj, function (key, value) {
                 var color = "rgb(" + Math.random() * 255 + "," + Math.random() * 255 + "," + Math.random() * 255 + ")"
-                var xFac = Math.random();
-                for (k = 1; k <= N; k++) {
-                    var r = radius(k, N, b);
-                    var theta = 2 * Math.PI * k / phi ^ 2;
-                    var x = r * Math.cos(theta) + (xFac ^ i) * 10;
-                    var y = r * Math.sin(theta) + (xFac ^ i) * 10;
+                var N = databaseObj[key].length;
+                var b = Math.round(alpha * Math.sqrt(N));
+                var phi = (Math.sqrt(alpha) + 1) / 2;
+                var rnd = Math.random();
+                var fac = grouped ? 10 : 1;
+                $.each(value, function (idx, obj) {
+                    var i = grouped ? idx + 1 : globalIdx;
+                    var r = radius(i, N, b);
+                    var theta = 2 * Math.PI * i / phi ^ 2;
+                    var x = r * Math.cos(theta) + rnd * fac;
+                    var y = r * Math.sin(theta) + rnd * fac;
                     var object = {
                         x: [x]
                         , y: [y]
                         , type: "scatter"
-                        , name: databaseObj[i][k - 1].category
+                        , name: obj.category
                         , mode: "markers"
                         , marker: {
                             size: 24
                             , color: color
                         }
-                        , obj: databaseObj[i][k - 1]
-                        , text: databaseObj[i][k - 1].category + ": " + databaseObj[i][k - 1].text
+                        , obj: obj
+                        , text: obj.category + ": " + obj.text
                         , textposition: 'bottom'
                         , hoverinfo: "text"
                     };
                     data.push(object);
-                }
-            }
+                    globalIdx += 1;
+                });
+            });
             var layout = {
                 hovermode: 'closest'
                 , showlegend: false
@@ -185,7 +148,9 @@
                     , showticklabels: false
                 }
             };
-            Plotly.newPlot('myDiv', data, layout);
+            Plotly.newPlot('myDiv', data, layout, {
+                displayModeBar: false
+            });
             myPlot.on('plotly_click', function (data) {
                 var pts = '';
                 var point = null;
@@ -198,11 +163,77 @@
             });
         }
 
+        function groupByCategory() {
+            var dict = {};
+            var databaseObj = getAllPosts();
+            $.each(databaseObj, function (idx, obj) {
+                dict[obj.category] = dict[obj.category] || [];
+                dict[obj.category].push(obj);
+            });
+            return dict;
+        }
+
+        function groupByTag() {
+            var dict = {};
+            var databaseObj = getAllPosts();
+            $.each(databaseObj, function (idx, obj) {
+                $.each(obj.tags, function (idx, tag) {
+                    dict[obj.category] = dict[obj.category] || [];
+                    dict[obj.category].push(obj);
+                })
+            });
+            return dict;
+        }
+
         function radius(k, n, b) {
             var r = 0;
             if (k > (n - b)) r = 1;
             else r = Math.sqrt(k - (1 / 2)) / Math.sqrt(n - (b + 1) / 2);
             return r;
+        }
+
+        function getAllPosts() {
+            return [{
+                    category: "Enterpreneurship"
+                    , text: "Die Geschichte meines ersten eigenen Unternehmens"
+                }
+                , {
+                    category: "Enterpreneurship"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Enterpreneurship"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }, {
+                    category: "Enterpreneurship"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }, {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }, {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }, {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+            ];
         }
     </script>
 </body>
