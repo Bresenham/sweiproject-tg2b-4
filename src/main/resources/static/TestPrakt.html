@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .sidebar {
+            width: 20%;
+            margin-top: 2%;
+            float: right;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <ul class="nav nav-sidebar">
+            <li><a href="#" id="defaultView">Default View</a></li>
+            <li><a data-toggle="collapse" data-target="#filterContainer" href="#">Filter by</a>
+                <div class="collapse" id="filterContainer">
+                    <select class="form-control" id="filterType">
+                        <option value="Tag">Tag</option>
+                        <option value="Category">Category</option>
+                    </select>
+                    <input type="text" class="form-control collapse" id="tagInput" />
+                    <select class="form-control collapse" id="categorySelection">
+                        <option value="Students">Students</option>
+                        <option value="Teachers">Teachers</option>
+                        <option value="Travelling">Travelling</option>
+                        <option value="Enterpreneurship">Enterpreneurship</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <button type="button" id="btnApply" class="btn btn-success form-control">Apply</button>
+            </li>
+            <li>&nbsp;</li>
+            <li>
+                <button type="button" id="btnCreatePost" class="btn btn-warning form-control">Create New Post</button>
+            </li>
+        </ul>
+    </div>
+    <div id="myDiv"></div>
+    <script type="text/javascript">
+        var myPlot = document.getElementById('myDiv');
+        var databaseObj = [
+                [
+                {
+                    category: "Enterpreneurship"
+                    , text: "Die Geschichte meines ersten eigenen Unternehmens"
+                }
+                , {
+                    category: "Enterpreneurship"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Enterpreneurship"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }, {
+                    category: "Enterpreneurship"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                ], [
+                {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }, {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                , {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }, {
+                    category: "Teachers"
+                    , text: "Mein erstes, eigenes Unternehmen"
+                }
+                ]
+            ];
+        $(document).ready(function () {
+            display(databaseObj);
+        });
+        $("#defaultView").click(function () {
+            location.reload();
+        });
+        $("#filterType").change(function () {
+            var selection = $("#filterType :selected").text();
+            if (selection == "Tag") {
+                $("#tagInput").show();
+                $("#categorySelection").hide();
+            }
+            else if (selection == "Category") {
+                $("#categorySelection").show();
+                $("#tagInput").hide();
+            }
+        });
+        $("#btnApply").click(function () {
+            var selection = $("#filterType :selected").text();
+            var filtered = [[]];
+            if (selection == "Category") {
+                var cat = $("#categorySelection :selected").text();
+                $.each(databaseObj, function (idx, d1) {
+                    $.each(d1, function (idx, obj) {
+                        if (obj.category == cat) {
+                            filtered[0].push(obj)
+                        };
+                    })
+                })
+            }
+            console.log(filtered);
+            display(filtered);
+        });
+
+        function display(databaseObj) {
+            Plotly.purge(myDiv);
+            var data = [];
+            var alpha = 2;
+            for (i = 0; i < databaseObj.length; i++) {
+                var N = databaseObj[i].length;
+                var b = Math.round(alpha * Math.sqrt(N));
+                var phi = (Math.sqrt(5) + 1) / 2;
+                var color = "rgb(" + Math.random() * 255 + "," + Math.random() * 255 + "," + Math.random() * 255 + ")"
+                var xFac = Math.random();
+                for (k = 1; k <= N; k++) {
+                    var r = radius(k, N, b);
+                    var theta = 2 * Math.PI * k / phi ^ 2;
+                    var x = r * Math.cos(theta) + (xFac ^ i) * 10;
+                    var y = r * Math.sin(theta) + (xFac ^ i) * 10;
+                    var object = {
+                        x: [x]
+                        , y: [y]
+                        , type: "scatter"
+                        , name: databaseObj[i][k - 1].category
+                        , mode: "markers"
+                        , marker: {
+                            size: 24
+                            , color: color
+                        }
+                        , obj: databaseObj[i][k - 1]
+                        , text: databaseObj[i][k - 1].category + ": " + databaseObj[i][k - 1].text
+                        , textposition: 'bottom'
+                        , hoverinfo: "text"
+                    };
+                    data.push(object);
+                }
+            }
+            var layout = {
+                hovermode: 'closest'
+                , showlegend: false
+                , autosize: false
+                , width: 1400
+                , height: 900
+                , xaxis: {
+                    autorange: true
+                    , showgrid: false
+                    , zeroline: false
+                    , showline: false
+                    , autotick: true
+                    , ticks: ''
+                    , showticklabels: false
+                }
+                , yaxis: {
+                    autorange: true
+                    , showgrid: false
+                    , zeroline: false
+                    , showline: false
+                    , autotick: true
+                    , ticks: ''
+                    , showticklabels: false
+                }
+            };
+            Plotly.newPlot('myDiv', data, layout);
+            myPlot.on('plotly_click', function (data) {
+                var pts = '';
+                var point = null;
+                for (var i = 0; i < data.points.length; i++) {
+                    pts = 'x = ' + data.points[i].x + '\ny = ' + data.points[i].y.toPrecision(4) + '\n\n';
+                    point = data.points[i];
+                }
+                console.log(point);
+                alert('Closest point clicked:\n\n' + pts + "\r\nText: " + point.data.obj.text);
+            });
+        }
+
+        function radius(k, n, b) {
+            var r = 0;
+            if (k > (n - b)) r = 1;
+            else r = Math.sqrt(k - (1 / 2)) / Math.sqrt(n - (b + 1) / 2);
+            return r;
+        }
+    </script>
+</body>
+
+</html>
