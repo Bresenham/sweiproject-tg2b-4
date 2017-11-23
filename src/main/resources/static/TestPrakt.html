@@ -26,13 +26,8 @@
                         <option value="Tag">Tag</option>
                         <option value="Category">Category</option>
                     </select>
-                    <input type="text" class="form-control collapse" id="tagInput" />
-                    <select class="form-control collapse" id="categorySelection">
-                        <option value="Students">Students</option>
-                        <option value="Teachers">Teachers</option>
-                        <option value="Travelling">Travelling</option>
-                        <option value="Enterpreneurship">Enterpreneurship</option>
-                    </select>
+                    <input type="text" class="form-control" id="tagInput" />
+                    <select class="form-control collapse" id="categorySelection"> </select>
                 </div>
             </li>
             <li><a data-toggle="collapse" data-target="#groupContainer" href="#">Group by</a>
@@ -42,6 +37,7 @@
                     </select>
                 </div>
             </li>
+            <li>&nbsp;</li>
             <li>
                 <button type="button" id="btnApply" class="btn btn-success form-control">Apply</button>
             </li>
@@ -54,11 +50,22 @@
     <div id="myDiv"></div>
     <script type="text/javascript">
         var myPlot = document.getElementById('myDiv');
+        var lastActive = "";
         $(document).ready(function () {
+            var cats = getCategories();
+            $.each(cats, function (idx, cat) {
+                $("#categorySelection").append("<option value=\"" + cat + "\">" + cat + "</option>");
+            });
             display(groupByCategory(getAllPosts()), false);
         });
         $("#defaultView").click(function () {
             location.reload();
+        });
+        $("#groupType").click(function () {
+            lastActive = "Group";
+        });
+        $("#filterType").click(function () {
+            lastActive = "Filter";
         });
         $("#filterType").change(function () {
             var selection = $("#filterType :selected").text();
@@ -70,19 +77,30 @@
                 $("#categorySelection").show();
                 $("#tagInput").hide();
             }
+            lastActive = "Filter";
         });
         $("#btnApply").click(function () {
-            var selection = $("#filterType :selected").text();
-            var filtered = {};
-            if (selection == "Category") {
-                var grouped = groupByCategory();
-                var cat = $("#categorySelection :selected").text();
-                filtered[cat] = [];
-                $.map(grouped, function (value, key) {
-                    if (key == cat) filtered[cat] = value;
-                });
+            if (lastActive == "Filter") {
+                var selection = $("#filterType :selected").text();
+                var filtered = {};
+                if (selection == "Category") {
+                    var cat = $("#categorySelection :selected").text();
+                    filtered = filterByCategory(cat);
+                }
+                else if (selection == "Tag") {
+                    var tags = $("#tagInput").val().split("#");
+                    filtered = filterByTags(tags);
+                }
+                display(filtered, true);
             }
-            display(filtered, true);
+            else if (lastActive == "Group") {
+                var selection = $("#groupType :selected").text();
+                var filtered = {};
+                if (selection == "Category") {
+                    filtered = groupByCategory();
+                }
+                display(filtered, true);
+            }
         });
 
         function display(databaseObj, grouped) {
@@ -104,6 +122,9 @@
                     var theta = 2 * Math.PI * i / phi ^ 2;
                     var x = r * Math.cos(theta) + rnd * fac;
                     var y = r * Math.sin(theta) + rnd * fac;
+                    var tagStr = $.map(obj.tags, function (val, i) {
+                        return "#" + val;
+                    });
                     var object = {
                         x: [x]
                         , y: [y]
@@ -115,7 +136,7 @@
                             , color: color
                         }
                         , obj: obj
-                        , text: obj.category + ": " + obj.text
+                        , hovertext: obj.category + ": " + obj.title + " [" + tagStr + "]"
                         , textposition: 'bottom'
                         , hoverinfo: "text"
                     };
@@ -185,6 +206,30 @@
             return dict;
         }
 
+        function filterByCategory(cat) {
+            var grouped = groupByCategory(getAllPosts());
+            var filtered = {};
+            filtered[cat] = [];
+            $.map(grouped, function (value, key) {
+                if (key == cat) filtered[cat] = value;
+            });
+            return filtered;
+        }
+
+        function filterByTags(tags) {
+            var databaseObj = getAllPosts();
+            var filtered = {};
+            $.each(tags, function (idx, tag) {
+                filtered[tag] = [];
+            });
+            $.each(databaseObj, function (idx, obj) {
+                $.each(tags, function (idx, tag) {
+                    if (obj.tags.indexOf(tag) > -1) filtered[tag].push(obj);
+                });
+            });
+            return filtered;
+        }
+
         function radius(k, n, b) {
             var r = 0;
             if (k > (n - b)) r = 1;
@@ -195,45 +240,60 @@
         function getAllPosts() {
             return [{
                     category: "Enterpreneurship"
-                    , text: "Die Geschichte meines ersten eigenen Unternehmens"
+                    , title: "Die Geschichte meines ersten eigenen Unternehmens"
+                    , tags: ["Money", "Freedom", "Rich"]
                 }
                 , {
                     category: "Enterpreneurship"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: ["Money", "Rich"]
                 }
                 , {
                     category: "Enterpreneurship"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: ["Poor", "Money"]
                 }, {
                     category: "Enterpreneurship"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: ["Money"]
                 }, {
                     category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: ["Learn", "Teach", "Life"]
                 }
                 , {
                     category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: ["Learn", "Teach"]
                 }
                 , {
                     category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: []
                 }, {
                     category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: ["Life"]
                 }
                 , {
                     category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: ["Smart", "Rich"]
                 }
                 , {
                     category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: ["Intelligence"]
                 }, {
                     category: "Teachers"
-                    , text: "Mein erstes, eigenes Unternehmen"
+                    , title: "Mein erstes, eigenes Unternehmen"
+                    , tags: []
                 }
             ];
+        }
+
+        function getCategories() {
+            return ["Students", "Teachers", "Travelling", "Enterpreneurship", "Business"];
         }
     </script>
 </body>
