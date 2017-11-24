@@ -19,7 +19,7 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="ID">ID:</label>
             <div class="col-sm-10">
-                <input type="email" class="form-control" id="ID" readonly> </div>
+                <input type="email" class="form-control" id="ID" placeholder="Enter ID you received"> </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="title">Title:</label>
@@ -58,15 +58,13 @@
     </form>
     <script type="text/javascript">
         $(document).ready(function () {
-            var ID = getNewID();
-            $("#ID").val(ID);
             $.each(getCategories(), function (idx, cat) {
                 $("#category").append("<option value=\"" + cat + "\">" + cat + "</option>");
             });
         });
 
-        function getNewID() {
-            return "42";
+        function checkID() {
+            var inputID = $("#ID").val();
         }
 
         function getCategories() {

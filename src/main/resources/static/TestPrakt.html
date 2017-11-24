@@ -103,11 +103,7 @@
             }
         });
         $("#btnCreatePost").click(function () {
-            var current = window.location.href;
-            if (current.indexOf("#") > -1) var current = current.replace("TestPrakt.html#", "");
-            else var current = current.replace("TestPrakt.html", "");
-            var current = current + "CreatePost.html";
-            window.location.href = current;
+            window.location.href = "./RequestID.html";
         });
 
         function display(databaseObj, grouped) {
