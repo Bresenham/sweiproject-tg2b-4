@@ -182,8 +182,12 @@
                     pts = 'x = ' + data.points[i].x + '\ny = ' + data.points[i].y.toPrecision(4) + '\n\n';
                     point = data.points[i];
                 }
-                console.log(point);
-                alert('Closest point clicked:\n\n' + pts + "\r\nText: " + point.data.obj.text);
+                var requestStr = "?";
+                $.each(point.data.obj, function (key, value) {
+                    requestStr = requestStr + key + "=" + value + "&";
+                });
+                requestStr = requestStr.substr(0, requestStr.length - 1);
+                window.location.href = "./EditPost.html" + requestStr;
             });
         }
 
