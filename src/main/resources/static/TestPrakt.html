@@ -6,48 +6,47 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <style type="text/css">
-        .sidebar {
-            width: 20%;
-            margin-top: 2%;
-            float: right;
-            font-size: 16px;
-        }
-    </style>
-</head>
+    <link rel="stylesheet" href="style5.css"> </head>
 
 <body>
-    <div class="sidebar">
-        <ul class="nav nav-sidebar">
-            <li><a href="#" id="defaultView">Default View</a></li>
-            <li><a data-toggle="collapse" data-target="#filterContainer" href="#" id="filterByHeader">Filter by</a>
-                <div class="collapse" id="filterContainer">
-                    <select class="form-control" id="filterType">
-                        <option value="Tag">Tag</option>
-                        <option value="Category">Category</option>
-                    </select>
-                    <input type="text" class="form-control" id="tagInput" />
-                    <select class="form-control collapse" id="categorySelection"> </select>
-                </div>
-            </li>
-            <li><a data-toggle="collapse" data-target="#groupContainer" href="#">Group by</a>
-                <div class="collapse" id="groupContainer">
-                    <select class="form-control" id="groupType">
-                        <option value="Category">Category</option>
-                    </select>
-                </div>
-            </li>
-            <li>&nbsp;</li>
-            <li>
-                <button type="button" id="btnApply" class="btn btn-success form-control">Apply</button>
-            </li>
-            <li>&nbsp;</li>
-            <li>
-                <button type="button" id="btnCreatePost" class="btn btn-warning form-control">Create New Post</button>
-            </li>
-        </ul>
+    <div class="wrapper">
+        <nav id="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <h3>Menu</h3> </div>
+            <!-- Sidebar Links -->
+            <ul class="list-unstyled components">
+                <li><a href="#" id="defaultView">Home</a></li>
+                <li><a data-toggle="collapse" data-target="#filterContainer" href="#" id="filterByHeader">Filter by</a>
+                    <div class="collapse" id="filterContainer">
+                        <select class="form-control" id="filterType">
+                            <option value="Tag">Tag</option>
+                            <option value="Category">Category</option>
+                        </select>
+                        <input type="text" class="form-control" id="tagInput" />
+                        <select class="form-control collapse" id="categorySelection"> </select>
+                    </div>
+                </li>
+                <li><a data-toggle="collapse" data-target="#groupContainer" href="#">Group by</a>
+                    <div class="collapse" id="groupContainer">
+                        <select class="form-control" id="groupType">
+                            <option value="Category">Category</option>
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <button type="button" id="btnApply" class="btn btn-success form-control">Apply</button>
+                </li>
+                <li>
+                    <button type="button" id="btnCreatePost" class="btn btn-warning form-control">Create New Post</button>
+                </li>
+            </ul>
+        </nav>
+        <div id="content">
+            <div> </div>
+        </div>
+        <div id="myDiv"></div>
     </div>
-    <div id="myDiv"></div>
     <script type="text/javascript">
         var myPlot = document.getElementById('myDiv');
         var lastActive = "";
