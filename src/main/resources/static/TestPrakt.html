@@ -27,7 +27,7 @@
                         <select class="form-control collapse" id="categorySelection"> </select>
                     </div>
                 </li>
-                <li><a data-toggle="collapse" data-target="#groupContainer" href="#">Group by</a>
+                <li><a data-toggle="collapse" data-target="#groupContainer" href="#" id="groupByHeader">Group by</a>
                     <div class="collapse" id="groupContainer">
                         <select class="form-control" id="groupType">
                             <option value="Category">Category</option>
@@ -62,6 +62,9 @@
         });
         $("#filterByHeader").click(function () {
             lastActive = "Filter";
+        });
+        $("#groupByHeader").click(function () {
+            lastActive = "Group";
         });
         $("#groupType").click(function () {
             lastActive = "Group";
@@ -113,14 +116,15 @@
             var data = [];
             var alpha = 2;
             console.log(databaseObj);
-            var globalIdx = 1;
+            var clr = 0;
             $.each(databaseObj, function (key, value) {
-                var color = "rgb(" + Math.random() * 255 + "," + Math.random() * 255 + "," + Math.random() * 255 + ")"
+                var color = colorPalette[clr];
                 var N = databaseObj[key].length;
                 var b = Math.round(alpha * Math.sqrt(N));
                 var phi = (Math.sqrt(alpha) + 1) / 2;
                 var rnd = Math.random();
                 var fac = grouped ? 10 : 1;
+                var globalIdx = 1;
                 $.each(value, function (idx, obj) {
                     var i = grouped ? idx + 1 : globalIdx;
                     var r = radius(i, N, b);
@@ -148,6 +152,7 @@
                     data.push(object);
                     globalIdx += 1;
                 });
+                clr += 1;
             });
             var layout = {
                 hovermode: 'closest'
@@ -297,6 +302,10 @@
                     category: "Teachers"
                     , title: "Mein erstes, eigenes Unternehmen"
                     , tags: []
+                }, {
+                    category: "Travelling"
+                    , title: "My story how I went to mars - in my dreams."
+                    , tags: ["Dreaming", "Mars"]
                 }
             ];
         }
@@ -304,6 +313,7 @@
         function getCategories() {
             return ["Students", "Teachers", "Travelling", "Enterpreneurship", "Business"];
         }
+        var colorPalette = ["#2c6fc1", "#5cb85c", "#ffbb33", "#2BBBAD", "#aa66cc", "#9e9e9e"];
     </script>
 </body>
 
