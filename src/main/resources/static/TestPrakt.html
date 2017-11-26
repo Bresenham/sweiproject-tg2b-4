@@ -20,7 +20,7 @@
     <div class="sidebar">
         <ul class="nav nav-sidebar">
             <li><a href="#" id="defaultView">Default View</a></li>
-            <li><a data-toggle="collapse" data-target="#filterContainer" href="#">Filter by</a>
+            <li><a data-toggle="collapse" data-target="#filterContainer" href="#" id="filterByHeader">Filter by</a>
                 <div class="collapse" id="filterContainer">
                     <select class="form-control" id="filterType">
                         <option value="Tag">Tag</option>
@@ -60,6 +60,9 @@
         });
         $("#defaultView").click(function () {
             location.reload();
+        });
+        $("#filterByHeader").click(function () {
+            lastActive = "Filter";
         });
         $("#groupType").click(function () {
             lastActive = "Group";
