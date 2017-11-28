@@ -27,13 +27,27 @@ public class ActivityController {
 @GetMapping
   public ArrayList<Activity> listAll() {
       ArrayList<Activity> activities = new ArrayList<>();
-      activityRepository.findAll().forEach(activity -> activities.add(activity));
+      activityRepository.findAll().forEach(activity -> 
+      {if(activity.isValid())
+    	  activities.add(activity);
+      });
       return activities;
   }
 
   @GetMapping("{id}")
   public Activity find(@PathVariable Long id) {
       return activityRepository.findOne(id);
+  }
+  
+  @GetMapping("{valid}")
+  public ArrayList<Activity> listAll(@PathVariable boolean valid)
+  {
+	  ArrayList<Activity> activities = new ArrayList<>();
+      activityRepository.findAll().forEach(activity -> 
+      {if(activity.isValid() == valid)
+    	  activities.add(activity);
+      });
+      return activities;
   }
 
   @PostMapping
@@ -43,7 +57,11 @@ public class ActivityController {
 
   @DeleteMapping("{id}")
   public void delete(@PathVariable Long id) {
-      activityRepository.delete(id);
+      Activity activity = activityRepository.findOne(id);
+      if(activity != null)
+      {
+    	  activity.setValid(false);
+      }
   }
 
   @PutMapping("{id}")
