@@ -17,7 +17,7 @@ public class Activity {
 
     public Activity (){};
 
-    public Activity(String text, String tags, String title) {
+    public Activity(Long id, String text, String tags, String title) {
         this.text = text;
         this.tags = tags;
         this.title = title;
