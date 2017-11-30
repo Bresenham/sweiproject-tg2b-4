@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -31,13 +32,16 @@
             var input = $("#email").val();
             if (input.length == 0) alert("Missing E-Mail.");
             else {
-            	sendIDToEmail(input);
+                sendIDToEmail(input);
                 window.location.href = window.location.href = "./CreatePost.html";;
             }
         });
 
         function sendIDToEmail(email) {
-            $.post("SendMail", email, function (data) {
+            alert(email);
+            $.post("SendMail", JSON.stringify({
+                "email": email
+            }), function (data) {
                 alert(data);
             });
         }
