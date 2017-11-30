@@ -38,10 +38,11 @@
         });
 
         function sendIDToEmail(email) {
-            alert(email);
-            $.post("SendMail", JSON.stringify({
+            var json = JSON.stringify({
                 "email": email
-            }), function (data) {
+            });
+            alert(json);
+            $.post("SendMail", json, function (data) {
                 alert(data);
             });
         }
