@@ -36,7 +36,7 @@
         });
 
         function sendIDToEmail(email) {
-            $.post( "./CodeController", "{" + email + "}", function( data ) {
+            $.post( "./RequestID", "{ data: " + email + "}", function( data ) {
                 alert(data);
             });
         }

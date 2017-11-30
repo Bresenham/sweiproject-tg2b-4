@@ -9,7 +9,6 @@ import javax.persistence.Id;
 public class Activity {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private String text;
     private String tags;
@@ -19,6 +18,7 @@ public class Activity {
     public Activity (){};
 
     public Activity(Long id, String text, String tags, String title) {
+    	this.id = id;
         this.text = text;
         this.tags = tags;
         this.title = title;
