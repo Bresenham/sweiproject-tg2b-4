@@ -38,12 +38,15 @@
         });
 
         function sendIDToEmail(email) {
-            var json = JSON.stringify({
-                "email": email
-            });
-            alert(json);
-            $.post("SendMail", json, function (data) {
-                alert(data);
+            jQuery.ajax({
+                url: "SendMail"
+                , type: "POST"
+                , data: email
+                , dataType: "text"
+                , contentType: "application/x-www-form-urlencoded"
+                , success: function () {
+                    //
+                }
             });
         }
     </script>
