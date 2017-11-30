@@ -21,7 +21,8 @@ public class CodeController {
 	
 	
 	@PostMapping
-	public HttpStatus send(@RequestBody String mail) {
+	public HttpStatus send(@RequestBody Mail mail) {
+		System.out.println("adads");
 		long min = 100000;
 		long max = 999999;
 		long id = -1;
@@ -38,7 +39,7 @@ public class CodeController {
 		ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
 
 		MailMail mm = (MailMail) context.getBean("mailMail");
-		mm.sendMail("activitymeter1@gmail.com", mail, "ActivityMeter-Code",
+		mm.sendMail("activitymeter1@gmail.com", mail.getAdress(), "ActivityMeter-Code",
 				"Hallo, \nder angeforderte Code lautet: " + id);
 		return HttpStatus.OK;
 
