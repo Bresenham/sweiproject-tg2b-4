@@ -1,4 +1,4 @@
-package mail;
+package base.mail;
 
 public class Mail {
 	private String adress;
@@ -11,6 +11,10 @@ public class Mail {
 
 	public String getAdress() {
 		return adress;
+	}
+
+	public void setAdress(String adress) {
+		this.adress = adress;
 	}
 
 	

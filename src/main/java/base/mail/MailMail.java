@@ -1,4 +1,4 @@
-package mail;
+package base.mail;
 
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
