@@ -30,20 +30,25 @@
     <script type="text/javascript">
         $("#btnProceed").click(function () {
             var input = $("#email").val();
-            if (input.length == 0) alert("Missing E-Mail.");
+            if (input.length == 0) {
+                alert("Missing E-Mail.");
+            }
             else {
                 sendIDToEmail(input);
-                window.location.href = window.location.href = "./CreatePost.html";;
             }
         });
 
         function sendIDToEmail(email) {
             jQuery.ajax({
-                type: "POST",
-                contentType : 'application/json; charset=utf-8',
-                url: "/SendMail",
-                dataType: "json",
-                data: JSON.stringify(email)
+                type: "POST"
+                , contentType: 'application/json; charset=utf-8'
+                , url: "/SendMail"
+                , dataType: "json"
+                , data: JSON.stringify(email)
+            }).done(function () {
+                window.location.href = "./CreatePost.html";
+            }).fail(function () {
+                alert("Something went wrong.");
             });
         }
     </script>
