@@ -38,25 +38,29 @@
                     <button type="button" id="btnApply" class="btn btn-success form-control">Apply</button>
                 </li>
                 <li>
-                    <button type="button" id="btnCreatePost" class="btn btn-warning form-control">Create New Post</button>
+                    <button type="button" id="btnCreatePost" class="btn btn-info form-control">Create New Post</button>
                 </li>
             </ul>
         </nav>
         <div id="content">
             <div> </div>
         </div>
-        <div id="myDiv"></div>
+        <div class="responsive-plot"></div>
     </div>
     <script type="text/javascript">
-        var myPlot = document.getElementById('myDiv');
         var lastActive = "";
+        var gd3;
         $(document).ready(function () {
             var cats = getCategories();
             $.each(cats, function (idx, cat) {
                 $("#categorySelection").append("<option value=\"" + cat + "\">" + cat + "</option>");
             });
+            gd3 = getNode();
             display(groupByCategory(getAllPosts()), false);
         });
+        window.onresize = function () {
+            Plotly.Plots.resize(gd3);
+        };
         $("#defaultView").click(function () {
             location.reload();
         });
@@ -112,7 +116,7 @@
         });
 
         function display(databaseObj, grouped) {
-            Plotly.purge(myDiv);
+            Plotly.purge(gd3);
             var data = [];
             var alpha = 2;
             console.log(databaseObj);
@@ -157,9 +161,7 @@
             var layout = {
                 hovermode: 'closest'
                 , showlegend: false
-                , autosize: false
-                , width: 1400
-                , height: 900
+                , autosize: true
                 , xaxis: {
                     autorange: true
                     , showgrid: false
@@ -179,10 +181,10 @@
                     , showticklabels: false
                 }
             };
-            Plotly.newPlot('myDiv', data, layout, {
+            Plotly.plot(gd3, data, layout, {
                 displayModeBar: false
             });
-            myPlot.on('plotly_click', function (data) {
+            gd3.on('plotly_click', function (data) {
                 var pts = '';
                 var point = null;
                 for (var i = 0; i < data.points.length; i++) {
@@ -196,6 +198,19 @@
                 requestStr = requestStr.substr(0, requestStr.length - 1);
                 window.location.href = "./EditPost.html" + requestStr;
             });
+        }
+
+        function getNode() {
+            var d3 = Plotly.d3;
+            var WIDTH_IN_PERCENT_OF_PARENT = 100
+                , HEIGHT_IN_PERCENT_OF_PARENT = 100;
+            var gd3 = d3.selectAll(".responsive-plot").style({
+                width: WIDTH_IN_PERCENT_OF_PARENT + '%'
+                , 'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%'
+                , height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh'
+                , 'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh'
+            });
+            return gd3.node();
         }
 
         function groupByCategory() {
