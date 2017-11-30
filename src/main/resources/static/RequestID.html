@@ -31,6 +31,7 @@
             var input = $("#email").val();
             if (input.length == 0) alert("Missing E-Mail.");
             else {
+            	sendIDToEmail(input);
                 window.location.href = window.location.href = "./CreatePost.html";;
             }
         });
