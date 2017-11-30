@@ -39,14 +39,11 @@
 
         function sendIDToEmail(email) {
             jQuery.ajax({
-                url: "SendMail"
-                , type: "POST"
-                , data: email
-                , dataType: "text"
-                , contentType: "application/x-www-form-urlencoded"
-                , success: function () {
-                    //
-                }
+                type: "POST",
+                contentType : 'application/json; charset=utf-8',
+                url: "/SendMail",
+                dataType: "json",
+                data: JSON.stringify(email)
             });
         }
     </script>

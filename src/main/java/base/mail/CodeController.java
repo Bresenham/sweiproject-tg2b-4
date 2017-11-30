@@ -22,7 +22,6 @@ public class CodeController {
 	
 	@PostMapping
 	public HttpStatus send(@RequestBody Mail mail) {
-		System.out.println("adads");
 		long min = 100000;
 		long max = 999999;
 		long id = -1;
