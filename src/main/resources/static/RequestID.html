@@ -37,7 +37,7 @@
         });
 
         function sendIDToEmail(email) {
-            $.post("./SendMail", email, function (data) {
+            $.post("SendMail", email, function (data) {
                 alert(data);
             });
         }
