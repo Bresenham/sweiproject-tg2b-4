@@ -36,7 +36,9 @@
         });
 
         function sendIDToEmail(email) {
-            //do smth
+            $.post("./CodeController", "{" + email + "}", function (data) {
+                alert(data);
+            });
         }
     </script>
 </body>
