@@ -9,15 +9,20 @@ import javax.persistence.Id;
 public class Activity {
 
     @Id
-    private Long id;
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private final int id;
     private String text;
-    private String tags;
+    private Tag[] tags;
     private String title;
     private boolean valid;
 
-    public Activity (){};
+    public Activity (int id){
+    	this.id = id;
+    	valid = true;
+    };
 
-    public Activity(Long id, String text, String tags, String title) {
+
+    public Activity(int id, String text, Tag[] tags, String title) {
     	this.id = id;
         this.text = text;
         this.tags = tags;
@@ -25,13 +30,13 @@ public class Activity {
         valid = true;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public void setId(int id) {
+//        this.id = id;
+//    }
 
     public String getText() {
         return text;
@@ -41,11 +46,11 @@ public class Activity {
         this.text = text;
     }
     
-    public String getTags() {
+    public Tag[] getTags() {
       return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(Tag[] tags) {
       this.tags = tags;
     }
 
@@ -65,5 +70,9 @@ public class Activity {
     public void setValid(boolean valid)
     {
     	this.valid = valid;
+    }
+    
+    public boolean checkId(int testId){
+    	return (testId == getId());
     }
 }
