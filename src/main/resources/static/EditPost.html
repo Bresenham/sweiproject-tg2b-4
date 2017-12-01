@@ -75,7 +75,7 @@
                 $("#tag").prop("disabled", false);
                 $("#btnSave").prop("disabled", false);
                 $("#btnDelete").prop("disabled", false);
-                id = "-1";
+                id = userInput;
             }
         })
         $("#btnSave").click(function () {
@@ -83,7 +83,7 @@
             var text = $("#text").val();
             var category = $("#category :selected").val();
             var tags = $("#tag").tagsinput("items");
-            editPost(title, text, category, tags);
+            editPost(id, title, text, category, tags);
         });
         $("#btnDelete").click(function () {
             var conf = confirm("Do you really want to delete this post?");

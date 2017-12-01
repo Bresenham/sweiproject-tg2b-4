@@ -52,7 +52,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2">
-                <button type="submit" class="btn btn-success" id="btnSubmit">Submit</button>
+                <button type="button" class="btn btn-success" id="btnSubmit">Submit</button>
             </div>
         </div>
     </form>
@@ -68,16 +68,23 @@
             var text = $("#text").val();
             var category = $("#category :selected").val();
             var tags = $("#tag").tagsinput("items");
-            transmitNewPost(ID, title, text, category, tags);
-            window.location.href = "./TestPrakt.html";
+            if (ID.length > 0 && title.length > 0 && text.length > 0) checkID(ID, title, text, category, tags);
+            else alert("Please enter ID, title and text.");
         });
 
-        function transmitNewPost(ID, title, text, category, tags) {
-            //do smth
-        }
-
-        function checkID() {
-            var inputID = $("#ID").val();
+        function checkID(ID, title, text, category, tags) {
+            var obj = JSON.stringify({
+                "id": ID
+                , "text": text
+                , "tags": tags
+                , "title": title
+            });
+            console.log(obj);
+            $.post("/activity", obj, function (ret) {
+                //check if ID exists
+            }).done(function () {
+                window.location.href = "./TestPrakt.html";
+            });
         }
 
         function getCategories() {
