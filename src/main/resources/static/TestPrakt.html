@@ -266,6 +266,9 @@
         }
 
         function getAllPosts() {
+            $.get("/activity", function (data) {
+                console.log(data);
+            });
             return [{
                     category: "Enterpreneurship"
                     , title: "Die Geschichte meines ersten eigenen Unternehmens"
