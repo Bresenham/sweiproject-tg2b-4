@@ -52,7 +52,7 @@ public class ActivityController {
 
   @PostMapping
   public Activity create(@RequestBody Activity input) {
-      return activityRepository.save(new Activity(input.getId(), input.getText(), input.getTags(), input.getTitle()));
+      return activityRepository.save(input);
   }
 
   @DeleteMapping("{id}")
