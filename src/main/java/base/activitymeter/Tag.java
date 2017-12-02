@@ -9,7 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/*
 import org.json.JSONObject;
+*/
 
 @Entity
 @Table(name = "tag")
@@ -68,6 +70,7 @@ public class Tag {
 		return (keyword.equals(getKeyword()));
 	}
 
+	/*
 	public String toString() {
 		String info = "";
 		try {
@@ -91,4 +94,5 @@ public class Tag {
 
 		return info;
 	}
+	*/
 }

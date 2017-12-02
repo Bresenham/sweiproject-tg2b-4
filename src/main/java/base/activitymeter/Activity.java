@@ -11,10 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/*
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+*/
 @Entity
 @Table(name = "activity")
 public class Activity {
@@ -88,11 +89,16 @@ public class Activity {
 	public void addTag(Tag t) {
 		tags.add(t);
 	}
+	
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
+	}
 
 	public Set<Tag> getTags() {
 		return this.tags;
 	}
 
+	/*
 	public String toString() {
 		String info = "";
 		try {
@@ -123,4 +129,5 @@ public class Activity {
 		return info;
 
 	}
+	*/
 }
