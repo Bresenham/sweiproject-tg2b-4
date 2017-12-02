@@ -10,20 +10,21 @@ public class Activity {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private final int id;
+    private int id;
+    private int key;
     private String text;
     private Tag[] tags;
     private String title;
     private boolean valid;
-
-    public Activity (int id){
-    	this.id = id;
+    
+    public Activity (int key){
+    	this.key = key;
     	valid = true;
     };
 
 
-    public Activity(int id, String text, Tag[] tags, String title) {
-    	this.id = id;
+    public Activity(int key, String text, Tag[] tags, String title) {
+    	this.key = key;
         this.text = text;
         this.tags = tags;
         this.title = title;
@@ -34,9 +35,17 @@ public class Activity {
         return id;
     }
 
-//    public void setId(int id) {
-//        this.id = id;
-//    }
+    public void setId(int id) {
+    	this.id = id;
+    }
+    
+    public int getKey() {
+    	return key;
+    }
+    
+    public void setKey(int key) {
+    	this.key = key;
+    }
 
     public String getText() {
         return text;
