@@ -17,10 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class ActivityController {
   
   @Autowired
-  private static ActivityRepository activityRepository;
+  private ActivityRepository activityRepository;
   
+  @Autowired
+  private TagRepository tagRepository;
   
-  public static ActivityRepository getActivityRepository() {
+  public TagRepository getTagRepository() {
+	  return tagRepository;
+  }
+  
+  public ActivityRepository getActivityRepository() {
 	return activityRepository;
 }
 
@@ -52,6 +58,13 @@ public class ActivityController {
 
   @PostMapping
   public Activity create(@RequestBody Activity input) {
+	  if(input.getTags() != null) {
+		  for(Tag t : input.getTags()) {
+			  t.setActivityId(input.getId());
+			  tagRepository.save(t);
+		  }
+	  }
+	  
       return activityRepository.save(input);
   }
 

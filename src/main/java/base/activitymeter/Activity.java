@@ -4,24 +4,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 
 @Entity
 public class Activity {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private int id;
+    private long id;
     private int key;
     private String text;
     private Tag[] tags;
     private String title;
     private boolean valid;
     
+    public Activity() {
+    	
+    }
+    
     public Activity (int key){
     	this.key = key;
     	valid = true;
     };
-
 
     public Activity(int key, String text, Tag[] tags, String title) {
     	this.key = key;
@@ -31,11 +36,11 @@ public class Activity {
         valid = true;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
     	this.id = id;
     }
     
@@ -81,7 +86,7 @@ public class Activity {
     	this.valid = valid;
     }
     
-    public boolean checkId(int testId){
+    public boolean checkId(long testId){
     	return (testId == getId());
     }
 }
