@@ -26,7 +26,7 @@ public class ActivityControllerTest {
     
 @Test
 public void testSend() throws Exception {
-        String json = "\"fabian.gierer@web.de\"";
+        String json = "\"x@y.z\"";
         this.mockMvc.perform(post("/SendMail").contentType(MediaType.APPLICATION_JSON).content(json)).andDo(print()).andExpect(status().isOk());
         
 }
