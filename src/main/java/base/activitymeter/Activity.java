@@ -23,7 +23,7 @@ public class Activity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	private int key;
+	private long key;
 	private String text;
 	private String title;
 	private boolean valid;
@@ -35,7 +35,7 @@ public class Activity {
 
 	}
 
-	public Activity(int key, String text, String title) {
+	public Activity(long key, String text, String title) {
 		this.key = key;
 		this.text = text;
 		this.title = title;
@@ -50,11 +50,11 @@ public class Activity {
 		this.id = id;
 	}
 
-	public int getKey() {
+	public long getKey() {
 		return key;
 	}
 
-	public void setKey(int key) {
+	public void setKey(long key) {
 		this.key = key;
 	}
 
