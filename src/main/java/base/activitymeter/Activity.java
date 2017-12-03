@@ -26,6 +26,7 @@ public class Activity {
 	private long key;
 	private String text;
 	private String title;
+	private String category;
 	private boolean valid;
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
@@ -35,10 +36,11 @@ public class Activity {
 
 	}
 
-	public Activity(long key, String text, String title) {
+	public Activity(long key, String text, String title, String category) {
 		this.key = key;
 		this.text = text;
 		this.title = title;
+		this.category = category;
 		valid = false;
 	}
 
@@ -72,6 +74,14 @@ public class Activity {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+	
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public boolean getValid() {

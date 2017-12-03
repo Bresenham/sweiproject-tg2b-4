@@ -1,6 +1,10 @@
 package base.activitymeter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -59,6 +63,11 @@ public class ActivityController {
 		});
 		return activities;
 	}
+	
+	@RequestMapping(value = "/activity/getCategories", method = RequestMethod.GET)
+	public List<String> getCategories(){
+		return Arrays.asList(new String[] {"Studuents","Teachers","Travelling","Business","Enterpreneurship"});
+	}
 
 	@RequestMapping(value = "/activity", method = RequestMethod.POST)
 	public HttpStatus create(@RequestBody Activity input) {
@@ -67,6 +76,7 @@ public class ActivityController {
 			if(act.getKey() == input.getKey()) {
 				act.setText(input.getText());
 				act.setTitle(input.getTitle());
+				act.setCategory(input.getCategory());
 				if (input.getTags() != null) {
 					act.setTags(input.getTags());
 					for (Tag t : input.getTags()) {
@@ -82,6 +92,20 @@ public class ActivityController {
 		});
 		activityRepository.findAll().forEach(System.out::println);
 		return foundOne[0] ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+		/*
+		Activity saved = input;
+		saved = activityRepository.save(saved);
+		
+		if (input.getTags() != null) {
+			for (Tag t : input.getTags()) {
+				saved.addTag(t);
+				tagRepository.delete(t);
+				tagRepository.save(new Tag(t.getKeyword(), input));
+		}
+		}
+		activityRepository.findAll().forEach(System.out::println);
+		return HttpStatus.OK;
+		*/
 	}
 
 	@RequestMapping(value = "/activity/{id}", method = RequestMethod.DELETE)
@@ -117,7 +141,7 @@ public class ActivityController {
 			unique = (activityRepository.findIdByKey(key).isEmpty());
 		}
 
-		activityRepository.save(new Activity(key, "", ""));
+		activityRepository.save(new Activity(key, "", "",""));
 
 		ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
 

@@ -73,15 +73,19 @@
         });
 
         function checkID(ID, title, text, category, tags) {
-            var obj = JSON.stringify({
-                "id": ID
+            var dat = JSON.stringify({
+                "key": parseInt(ID)
                 , "text": text
                 , "tags": tags
                 , "title": title
+                , "category": category
             });
-            console.log(obj);
-            $.post("/activity", obj, function (ret) {
-                //check if ID exists
+            jQuery.ajax({
+                type: "POST"
+                , contentType: 'application/json; charset=utf-8'
+                , url: "/activity"
+                , dataType: "json"
+                , data: dat
             }).done(function () {
                 window.location.href = "./TestPrakt.html";
             });

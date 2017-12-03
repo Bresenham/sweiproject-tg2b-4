@@ -51,12 +51,16 @@
         var lastActive = "";
         var gd3;
         $(document).ready(function () {
-            var cats = getCategories();
-            $.each(cats, function (idx, cat) {
-                $("#categorySelection").append("<option value=\"" + cat + "\">" + cat + "</option>");
+            $.get("/activity/getCategories", function (categories) {
+                $.each(categories, function (idx, category) {
+                    $("#categorySelection").append("<option value=\"" + category + "\">" + category + "</option>");
+                    categoryToColor[category] = colorTablett[idx];
+                })
+                gd3 = getNode();
+                $.get("/activity", function (posts) {
+                    display(posts);
+                });
             });
-            gd3 = getNode();
-            display(groupByCategory(getAllPosts()), false);
         });
         window.onresize = function () {
             Plotly.Plots.resize(gd3);
@@ -115,48 +119,41 @@
             window.location.href = "./RequestID.html";
         });
 
-        function display(databaseObj, grouped) {
+        function display(posts) {
             Plotly.purge(gd3);
             var data = [];
             var alpha = 2;
-            console.log(databaseObj);
-            var clr = 0;
-            $.each(databaseObj, function (key, value) {
-                var color = colorPalette[clr];
-                var N = databaseObj[key].length;
-                var b = Math.round(alpha * Math.sqrt(N));
-                var phi = (Math.sqrt(alpha) + 1) / 2;
-                var rnd = Math.random();
-                var fac = grouped ? 10 : 1;
-                var globalIdx = 1;
-                $.each(value, function (idx, obj) {
-                    var i = grouped ? idx + 1 : globalIdx;
-                    var r = radius(i, N, b);
-                    var theta = 2 * Math.PI * i / phi ^ 2;
-                    var x = r * Math.cos(theta) + rnd * fac;
-                    var y = r * Math.sin(theta) + rnd * fac;
-                    var tagStr = $.map(obj.tags, function (val, i) {
-                        return "#" + val;
-                    });
-                    var object = {
-                        x: [x]
-                        , y: [y]
-                        , type: "scatter"
-                        , name: obj.category
-                        , mode: "markers"
-                        , marker: {
-                            size: 24
-                            , color: color
-                        }
-                        , obj: obj
-                        , hovertext: obj.category + ": " + obj.title + " [" + tagStr + "]"
-                        , textposition: 'bottom'
-                        , hoverinfo: "text"
-                    };
-                    data.push(object);
-                    globalIdx += 1;
+            var N = posts.length;
+            var b = Math.round(alpha * Math.sqrt(N));
+            var phi = (Math.sqrt(alpha) + 1) / 2;
+            $.each(posts, function (id, post) {
+                var idx = id + 1;
+                var color = categoryToColor[post.category];
+                var r = radius(idx, N, b);
+                var theta = 2 * Math.PI * idx / phi ^ 2;
+                var tagStr = "";
+                $.each(post.tags, function (indx, tag) {
+                    tagStr += "#" + tag.keyword;
                 });
-                clr += 1;
+                var x = r * Math.cos(theta);
+                var y = r * Math.sin(theta);
+                console.log("X: " + x + " Y: " + y);
+                var object = {
+                    x: [x]
+                    , y: [y]
+                    , type: "scatter"
+                    , name: post.category
+                    , mode: "markers"
+                    , marker: {
+                        size: 24
+                        , color: color
+                    }
+                    , obj: post
+                    , hovertext: post.category + ": " + post.title + " [" + tagStr + "]"
+                    , textposition: 'bottom'
+                    , hoverinfo: "text"
+                };
+                data.push(object);
             });
             var layout = {
                 hovermode: 'closest'
@@ -193,7 +190,17 @@
                 }
                 var requestStr = "?";
                 $.each(point.data.obj, function (key, value) {
-                    requestStr = requestStr + key + "=" + value + "&";
+                    if (typeof value == "object") {
+                        requestStr += key + "=";
+                        $.each(value, function (idx, tag) {
+                            requestStr += tag.keyword + ",";
+                        });
+                        requestStr = requestStr.substr(0, requestStr.length - 1);
+                        requestStr += "&";
+                    }
+                    else {
+                        requestStr = requestStr + key + "=" + value + "&";
+                    }
                 });
                 requestStr = requestStr.substr(0, requestStr.length - 1);
                 window.location.href = "./EditPost.html" + requestStr;
@@ -213,9 +220,8 @@
             return gd3.node();
         }
 
-        function groupByCategory() {
+        function groupByCategory(databaseObj) {
             var dict = {};
-            var databaseObj = getAllPosts();
             $.each(databaseObj, function (idx, obj) {
                 dict[obj.category] = dict[obj.category] || [];
                 dict[obj.category].push(obj);
@@ -223,9 +229,8 @@
             return dict;
         }
 
-        function groupByTag() {
+        function groupByTag(databaseObj) {
             var dict = {};
-            var databaseObj = getAllPosts();
             $.each(databaseObj, function (idx, obj) {
                 $.each(obj.tags, function (idx, tag) {
                     dict[obj.category] = dict[obj.category] || [];
@@ -268,70 +273,11 @@
 
         function getAllPosts() {
             $.get("/activity", function (data) {
-                console.log(data);
+                return data;
             });
-            return [{
-                    category: "Enterpreneurship"
-                    , title: "Die Geschichte meines ersten eigenen Unternehmens"
-                    , tags: ["Money", "Freedom", "Rich"]
-                }
-                , {
-                    category: "Enterpreneurship"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: ["Money", "Rich"]
-                }
-                , {
-                    category: "Enterpreneurship"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: ["Poor", "Money"]
-                }, {
-                    category: "Enterpreneurship"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: ["Money"]
-                }, {
-                    category: "Teachers"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: ["Learn", "Teach", "Life"]
-                }
-                , {
-                    category: "Teachers"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: ["Learn", "Teach"]
-                }
-                , {
-                    category: "Teachers"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: []
-                }, {
-                    category: "Teachers"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: ["Life"]
-                }
-                , {
-                    category: "Teachers"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: ["Smart", "Rich"]
-                }
-                , {
-                    category: "Teachers"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: ["Intelligence"]
-                }, {
-                    category: "Teachers"
-                    , title: "Mein erstes, eigenes Unternehmen"
-                    , tags: []
-                }, {
-                    category: "Travelling"
-                    , title: "My story how I went to mars - in my dreams."
-                    , tags: ["Dreaming", "Mars"]
-                }
-            ];
         }
-
-        function getCategories() {
-            return ["Students", "Teachers", "Travelling", "Enterpreneurship", "Business"];
-        }
-        var colorPalette = ["#2c6fc1", "#5cb85c", "#ffbb33", "#2BBBAD", "#aa66cc", "#9e9e9e"];
+        var colorTablett = ["#2c6fc1", "#5cb85c", "#ffbb33", "#2BBBAD", "#9e9e9e"];
+        var categoryToColor = {};
     </script>
 </body>
 
