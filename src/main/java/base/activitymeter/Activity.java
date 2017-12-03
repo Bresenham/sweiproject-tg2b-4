@@ -95,6 +95,10 @@ public class Activity {
 	public boolean checkId(long testId) {
 		return (testId == getId());
 	}
+	
+	public boolean checkKey(long testKey) {
+		return (testKey == getKey());
+	}
 
 	public void addTag(Tag t) {
 		tags.add(t);

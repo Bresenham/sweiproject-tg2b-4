@@ -55,7 +55,7 @@ public class ActivityTest {
       Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time");
       boolean want = true;
       // act
-      boolean have = sut.checkId(365);
+      boolean have = sut.checkKey(365);
       // assert
       Assert.assertEquals(want, have);
   }  
@@ -64,7 +64,7 @@ public class ActivityTest {
       Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time");
       boolean want = false;
       // act
-      boolean have = sut.checkId(10056);
+      boolean have = sut.checkKey(10056);
       // assert
       Assert.assertEquals(want, have);
   }  
