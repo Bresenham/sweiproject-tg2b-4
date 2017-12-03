@@ -45,12 +45,12 @@ public class ActivityController {
 		return activities;
 	}
 
-	@RequestMapping(value = "/activity/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/activity/find/{id}", method = RequestMethod.GET)
 	public Activity find(@PathVariable Long id) {
 		return activityRepository.findOne(id);
 	}
 
-	@RequestMapping(value = "/activity/{valid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/activity/allValid/{valid}", method = RequestMethod.GET)
 	public ArrayList<Activity> listAll(@PathVariable boolean valid) {
 		ArrayList<Activity> activities = new ArrayList<>();
 		activityRepository.findAll().forEach(activity -> {

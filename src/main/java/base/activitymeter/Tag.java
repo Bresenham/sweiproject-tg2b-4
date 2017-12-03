@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /*
 import org.json.JSONObject;
 */
@@ -24,6 +26,7 @@ public class Tag {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "activity_id")
+	@JsonIgnore
 	private Activity activity;
 
 	public Tag() {
