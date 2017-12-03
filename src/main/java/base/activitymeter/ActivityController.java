@@ -53,6 +53,16 @@ public class ActivityController {
 	public Activity find(@PathVariable Long id) {
 		return activityRepository.findOne(id);
 	}
+	
+	@RequestMapping(value= "/activity/findByKey/{key}", method = RequestMethod.GET)
+	public Activity findByKey(@PathVariable Long key) {
+		Activity[] act = new Activity[] {null};
+		activityRepository.findAll().forEach(acti ->{
+			if(acti.getKey() == key)
+				act[0] = acti;
+		});
+		return act[0];
+	}
 
 	@RequestMapping(value = "/activity/allValid/{valid}", method = RequestMethod.GET)
 	public ArrayList<Activity> listAll(@PathVariable boolean valid) {
