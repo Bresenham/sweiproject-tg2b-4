@@ -1,6 +1,7 @@
 package base.activitymeter;
 
 import org.junit.Test;
+import org.junit.Assert;
 
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.impl.PojoClassFactory;
@@ -30,4 +31,41 @@ public class ActivityTest {
     // Start the Test
     validator.validate(activityPojo);
   }
+  @Test(timeout = 1_000) public void activityDefaultValidTest() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year");
+      boolean want = false;
+      // act
+      boolean have = sut.getValid();
+      // assert
+      Assert.assertEquals(want, have);
+  }  
+  @Test(timeout = 1_000) public void activityChangeValidTest() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year");
+      sut.setValid(true);
+      boolean want = true;
+      // act
+      boolean have = sut.getValid();
+      // assert
+      Assert.assertEquals(want, have);
+  }  
+  @Test(timeout = 1_000) public void activityCheckKeyTrue() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year");
+      boolean want = true;
+      // act
+      boolean have = sut.checkKey(365);
+      // assert
+      Assert.assertEquals(want, have);
+  }  
+  @Test(timeout = 1_000) public void activityCheckKeyFalse() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year");
+      boolean want = false;
+      // act
+      boolean have = sut.checkKey(10056);
+      // assert
+      Assert.assertEquals(want, have);
+  }  
 }
