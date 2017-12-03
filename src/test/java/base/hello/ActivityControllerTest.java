@@ -24,12 +24,12 @@ public class ActivityControllerTest {
     @Autowired
     private MockMvc mockMvc;
     
-//@Test
-//public void testSend() throws Exception {
-//        String json = "{ \"mail\":\"fabian.gierer@web.de\"}";
-//        this.mockMvc.perform(post("/SendMail").contentType(MediaType.APPLICATION_JSON).content(json)).andDo(print()).andExpect(status().isOk());
-//        
-//}
+@Test
+public void testSend() throws Exception {
+        String json = "\"fabian.gierer@web.de\"";
+        this.mockMvc.perform(post("/SendMail").contentType(MediaType.APPLICATION_JSON).content(json)).andDo(print()).andExpect(status().isOk());
+        
+}
 
 
 
