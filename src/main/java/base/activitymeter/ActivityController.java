@@ -62,19 +62,26 @@ public class ActivityController {
 
 	@RequestMapping(value = "/activity", method = RequestMethod.POST)
 	public HttpStatus create(@RequestBody Activity input) {
-
-		Activity saved = input;
-		saved = activityRepository.save(saved);
-
-		if (input.getTags() != null) {
-			for (Tag t : input.getTags()) {
-				saved.addTag(t);
-				tagRepository.delete(t);
-				tagRepository.save(new Tag(t.getKeyword(), input));
+		boolean[] foundOne = new boolean[] {false};
+		activityRepository.findAll().forEach(act ->{
+			if(act.getKey() == input.getKey()) {
+				act.setText(input.getText());
+				act.setTitle(input.getTitle());
+				if (input.getTags() != null) {
+					act.setTags(input.getTags());
+					for (Tag t : input.getTags()) {
+						act.addTag(t);
+						tagRepository.delete(t);
+						tagRepository.save(new Tag(t.getKeyword(), act));
+					}
+				}
+				act.setValid(true);
+				foundOne[0] = true;
+				activityRepository.save(act);
 			}
-		}
+		});
 		activityRepository.findAll().forEach(System.out::println);
-		return HttpStatus.OK;
+		return foundOne[0] ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 	}
 
 	@RequestMapping(value = "/activity/{id}", method = RequestMethod.DELETE)
