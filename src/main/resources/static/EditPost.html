@@ -54,57 +54,92 @@
         </div>
     </form>
     <script type="text/javascript">
-        var id = "-1";
+        var userInputKey = "-1";
         $(document).ready(function () {
-            $.each(getCategories(), function (idx, cat) {
-                $("#category").append("<option value=\"" + cat + "\">" + cat + "</option>");
+            $.get("/activity/getCategories", function (categories) {
+                $.each(categories, function (idx, category) {
+                    $("#category").append("<option value=\"" + category + "\">" + category + "</option>");
+                })
+                $("#category").val(getUrlParameter("category"));
             });
             $("#title").val(getUrlParameter("title"));
             $("#text").val(getUrlParameter("text"));
-            $("#category").val(getUrlParameter("category"));
             $.each(getUrlParameter("tags").split(","), function (idx, tag) {
                 $("#tag").tagsinput("add", tag);
             });
         });
         $("#btnEdit").click(function () {
             var userInput = prompt("Enter ID for this post:");
-            if (checkID(userInput)) {
-                $("#title").attr("readonly", false);
-                $("#text").attr("readonly", false)
-                $("#category").prop("disabled", false);
-                $("#tag").prop("disabled", false);
-                $("#btnSave").prop("disabled", false);
-                $("#btnDelete").prop("disabled", false);
-                id = userInput;
-            }
+            checkID(getUrlParameter("id"), userInput);
         })
         $("#btnSave").click(function () {
             var title = $("#title").val();
             var text = $("#text").val();
             var category = $("#category :selected").val();
             var tags = $("#tag").tagsinput("items");
-            editPost(id, title, text, category, tags);
+            editPost(getUrlParameter("id"), title, text, category, tags);
         });
         $("#btnDelete").click(function () {
             var conf = confirm("Do you really want to delete this post?");
-            if (conf) deletePost(id);
+            if (conf) deletePost(getUrlParameter("id"));
         });
 
-        function checkID(id) {
-            return true;
-        }
-
-        function getCategories() {
-            return ["Teachers", "Enterpreneurship", "Students", "Business", "Travelling"];
+        function checkID(id, key) {
+            $.get("/activity/findByKey/" + id + "/" + key, function (data) {
+                console.log(data);
+                if (data.hasOwnProperty("valid")) {
+                    $("#title").attr("readonly", false);
+                    $("#text").attr("readonly", false)
+                    $("#category").prop("disabled", false);
+                    $("#tag").prop("disabled", false);
+                    $("#btnSave").prop("disabled", false);
+                    $("#btnDelete").prop("disabled", false);
+                    $("#btnEdit").prop("disabled", true);
+                    userInputKey = key;
+                }
+                else {
+                    alert("ID does not belong to this post.")
+                }
+            })
         }
 
         function editPost(id, title, text, category, tags) {
-            //do smth
+            if (userInputKey != "-1") {
+                var dat = JSON.stringify({
+                    "id": id
+                    , "key": parseInt(userInputKey)
+                    , "text": text
+                    , "tags": tags
+                    , "title": title
+                    , "category": category
+                });
+                jQuery.ajax({
+                    type: "PUT"
+                    , contentType: 'application/json; charset=utf-8'
+                    , url: "/activity"
+                    , dataType: "json"
+                    , data: dat
+                }).done(function (data) {
+                    if (data == "OK") window.location.href = "./TestPrakt.html";
+                    else alert("ID does not belong to this post.");
+                });
+            }
+            else alert("You somehow tricked the system.");
         }
 
         function deletePost(id) {
-            //do smth
-            window.location.href = "./TestPrakt.html";
+            if (userInputKey != "-1") {
+                jQuery.ajax({
+                    type: "DELETE"
+                    , contentType: 'application/json; charset=utf-8'
+                    , url: "/activity/" + id + "/" + userInputKey
+                    , dataType: "json"
+                }).done(function (data) {
+                    if (data == "OK") window.location.href = "./TestPrakt.html";
+                    else alert("ID does not belong to this post.")
+                });
+            }
+            else alert("You somehow tricked the system.");
         }
 
         function getUrlParameter(sParam) {

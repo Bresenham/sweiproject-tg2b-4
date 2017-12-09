@@ -58,8 +58,10 @@
     </form>
     <script type="text/javascript">
         $(document).ready(function () {
-            $.each(getCategories(), function (idx, cat) {
-                $("#category").append("<option value=\"" + cat + "\">" + cat + "</option>");
+            $.get("/activity/getCategories", function (categories) {
+                $.each(categories, function (idx, category) {
+                    $("#category").append("<option value=\"" + category + "\">" + category + "</option>");
+                })
             });
         });
         $("#btnSubmit").click(function () {
@@ -86,8 +88,9 @@
                 , url: "/activity"
                 , dataType: "json"
                 , data: dat
-            }).done(function () {
-                window.location.href = "./TestPrakt.html";
+            }).done(function (data) {
+                if (data != "NOT_FOUND") window.location.href = "./TestPrakt.html";
+                else alert("ID doesn't exist.");
             });
         }
 

@@ -54,14 +54,16 @@ public class ActivityController {
 		return activityRepository.findOne(id);
 	}
 	
-	@RequestMapping(value= "/activity/findByKey/{key}", method = RequestMethod.GET)
-	public Activity findByKey(@PathVariable Long key) {
+	@RequestMapping(value= "/activity/findByKey/{id}/{key}", method = RequestMethod.GET)
+	public Activity findByKey(@PathVariable Long id, @PathVariable Long key) {
 		Activity[] act = new Activity[] {null};
-		activityRepository.findAll().forEach(acti ->{
-			if(acti.getKey() == key)
-				act[0] = acti;
-		});
-		return act[0];
+		Activity acti = activityRepository.findOne(id);
+		if(acti != null) {
+			if(acti.checkKey(key)) {
+				return acti;
+			}
+		}
+		return null;
 	}
 
 	@RequestMapping(value = "/activity/allValid/{valid}", method = RequestMethod.GET)
@@ -76,7 +78,7 @@ public class ActivityController {
 	
 	@RequestMapping(value = "/activity/getCategories", method = RequestMethod.GET)
 	public List<String> getCategories(){
-		return Arrays.asList(new String[] {"Studuents","Teachers","Travelling","Business","Enterpreneurship"});
+		return Arrays.asList(new String[] {"Students","Teachers","Travelling","Business","Enterpreneurship"});
 	}
 
 	@RequestMapping(value = "/activity", method = RequestMethod.POST)
@@ -118,25 +120,41 @@ public class ActivityController {
 		*/
 	}
 
-	@RequestMapping(value = "/activity/{id}", method = RequestMethod.DELETE)
-	public void delete(@PathVariable Long id) {
+	@RequestMapping(value = "/activity/{id}/{key}", method = RequestMethod.DELETE)
+	public HttpStatus delete(@PathVariable Long id, @PathVariable Long key) {
 		Activity activity = activityRepository.findOne(id);
 		if (activity != null) {
-			activity.setValid(false);
+			if(activity.checkKey(key)) {
+				activity.setValid(false);
+				activityRepository.save(activity);
+				return HttpStatus.OK;
+			}
 		}
+		return HttpStatus.NOT_FOUND;
 	}
 
-	@RequestMapping(value = "/activity/{id}", method = RequestMethod.PUT)
-	public Activity update(@PathVariable Long id, @RequestBody Activity input) {
-		Activity activity = activityRepository.findOne(id);
-		if (activity == null) {
-			return null;
-		} else {
-			activity.setText(input.getText());
-			// activity.setTags(input.getTags());
-			activity.setTitle(input.getTitle());
-			return activityRepository.save(activity);
+	@RequestMapping(value = "/activity", method = RequestMethod.PUT)
+	public HttpStatus update(@RequestBody Activity input) {
+		Activity activity = activityRepository.findOne(input.getId());
+		if(activity != null) {
+			if(activity.checkKey(input.getKey())) {
+				activity.setTitle(input.getTitle());
+				activity.setText(input.getText());
+				activity.setCategory(input.getCategory());
+				if(input.getTags() != null) {
+					for(Tag t : activity.getTags())
+						tagRepository.delete(t);
+					activity.setTags(input.getTags());
+					for (Tag t : input.getTags()) {
+						activity.addTag(t);
+						tagRepository.delete(t);
+						tagRepository.save(new Tag(t.getKeyword(), activity));
+					}
+				}
+				return HttpStatus.OK;
+			}
 		}
+		return HttpStatus.NOT_FOUND;
 	}
 
 	@RequestMapping(value = "/SendMail", method = RequestMethod.POST)

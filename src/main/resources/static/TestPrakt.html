@@ -199,7 +199,7 @@
                         requestStr += "&";
                     }
                     else {
-                        requestStr = requestStr + key + "=" + value + "&";
+                        if (key != "key") requestStr = requestStr + key + "=" + value + "&";
                     }
                 });
                 requestStr = requestStr.substr(0, requestStr.length - 1);
