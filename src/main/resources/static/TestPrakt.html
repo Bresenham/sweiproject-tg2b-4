@@ -203,7 +203,7 @@
                     }
                 });
                 requestStr = requestStr.substr(0, requestStr.length - 1);
-                window.location.href = "./EditPost.html" + requestStr;
+                window.location.href = "./EditPost.html" + encodeURI(requestStr);
             });
         }
 
