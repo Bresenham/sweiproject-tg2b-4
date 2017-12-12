@@ -20,6 +20,8 @@ import org.json.JSONObject;
 @Table(name = "activity")
 public class Activity {
 
+	private static long AdminKey = 999999;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -97,7 +99,8 @@ public class Activity {
 	}
 	
 	public boolean checkKey(long testKey) {
-		return (testKey == getKey());
+		// Hier auch Admin-Key akzeptieren.
+		return (testKey == getKey() || testKey == AdminKey);
 	}
 
 	public void addTag(Tag t) {
