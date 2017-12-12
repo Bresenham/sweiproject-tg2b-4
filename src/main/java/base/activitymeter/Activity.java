@@ -20,7 +20,7 @@ import org.json.JSONObject;
 @Table(name = "activity")
 public class Activity {
 
-	private static long AdminKey = 999999;
+	private static final long AdminKey = 999999;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
