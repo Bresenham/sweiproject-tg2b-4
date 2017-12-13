@@ -65,6 +65,15 @@ public class ActivityController {
 		}
 		return null;
 	}
+	@RequestMapping(value = "/activity/listByTag/{tagSearch}", method = RequestMethod.GET)
+	public ArrayList<Activity> listByTag(@PathVariable String tagSearch) {
+		ArrayList<Activity> activities = new ArrayList<>();
+		tagRepository.findAll().forEach(tag -> {
+			if (tag.checkKeyword(tagSearch))
+				activities.add(tag.getActivity());
+		});
+		return activities;
+	}
 
 	@RequestMapping(value = "/activity/allValid/{valid}", method = RequestMethod.GET)
 	public ArrayList<Activity> listAll(@PathVariable boolean valid) {
