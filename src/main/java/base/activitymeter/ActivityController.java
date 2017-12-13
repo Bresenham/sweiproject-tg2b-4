@@ -67,10 +67,24 @@ public class ActivityController {
 	}
 	@RequestMapping(value = "/activity/listByTag/{tagSearch}", method = RequestMethod.GET)
 	public ArrayList<Activity> listByTag(@PathVariable String tagSearch) {
+		String[] tags = tagSearch.split(",");
 		ArrayList<Activity> activities = new ArrayList<>();
-		tagRepository.findAll().forEach(tag -> {
-			if (tag.checkKeyword(tagSearch))
-				activities.add(tag.getActivity());
+		activityRepository.findAll().forEach(acti -> {
+			for(String tag : tags) {
+				if(acti.containsTag(tag)) {
+					activities.add(acti);
+					break;
+				}
+			}
+		});
+		return activities;
+	}
+	@RequestMapping(value = "/activity/listByCategory/{category}",method=RequestMethod.GET)
+	public ArrayList<Activity> listByCategory(@PathVariable String category){
+		ArrayList<Activity> activities = new ArrayList<>();
+		activityRepository.findAll().forEach(acti -> {
+			if(acti.getCategory().equals(category))
+				activities.add(acti);
 		});
 		return activities;
 	}
@@ -92,6 +106,7 @@ public class ActivityController {
 
 	@RequestMapping(value = "/activity", method = RequestMethod.POST)
 	public HttpStatus create(@RequestBody Activity input) {
+		/*
 		boolean[] foundOne = new boolean[] {false};
 		activityRepository.findAll().forEach(act ->{
 			if(act.getKey() == input.getKey()) {
@@ -113,8 +128,9 @@ public class ActivityController {
 		});
 		activityRepository.findAll().forEach(System.out::println);
 		return foundOne[0] ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-		/*
+		*/
 		Activity saved = input;
+		input.setValid(true);
 		saved = activityRepository.save(saved);
 		
 		if (input.getTags() != null) {
@@ -126,7 +142,6 @@ public class ActivityController {
 		}
 		activityRepository.findAll().forEach(System.out::println);
 		return HttpStatus.OK;
-		*/
 	}
 
 	@RequestMapping(value = "/activity/{id}/{key}", method = RequestMethod.DELETE)

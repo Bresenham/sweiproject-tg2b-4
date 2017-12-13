@@ -114,6 +114,17 @@ public class Activity {
 	public Set<Tag> getTags() {
 		return this.tags;
 	}
+	
+	public boolean containsTag(String keyword) {
+		boolean containsTag = false;
+		for(Tag t : getTags()) {
+			if(t.getKeyword().equals(keyword)) {
+				containsTag = true;
+				break;
+			}
+		}
+		return containsTag;
+	}
 
 	/*
 	public String toString() {

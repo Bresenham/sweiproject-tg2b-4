@@ -98,26 +98,58 @@
                 var filtered = {};
                 if (selection == "Category") {
                     var cat = $("#categorySelection :selected").text();
-                    filtered = filterByCategory(cat);
+                    filterByCategory(cat);
                 }
                 else if (selection == "Tag") {
-                    var tags = $("#tagInput").val().split("#");
-                    filtered = filterByTags(tags);
+                    var tags = $("#tagInput").val();
+                    if (tags.length > 0) {
+                        tags = tags.substr(1, tags.length - 1).replace("#", ",");
+                        filterByTags(tags);
+                    }
                 }
-                display(filtered, true);
             }
             else if (lastActive == "Group") {
                 var selection = $("#groupType :selected").text();
                 var filtered = {};
                 if (selection == "Category") {
-                    filtered = groupByCategory();
+                    groupByCategory();
                 }
-                display(filtered, true);
+                else if (selection == "Tag") {
+                    groupByTag();
+                }
             }
         });
         $("#btnCreatePost").click(function () {
             window.location.href = "./RequestID.html";
         });
+
+        function displayGrouped(posts) {
+            var data = [];
+            var alpha = 2;
+            var N = $.map(posts, function (n, i) {
+                return i;
+            }).length;
+            var b = Math.round(alpha * Math.sqrt(N));
+            var phi = (Math.sqrt(alpha) + 1) / 2;
+            $.each(Object.keys(posts), function (i, key) {
+                $.each(posts[key], function (id, post) {
+                    var idx = id + 1;
+                    var r = radius(idx, N, b);
+                    var theta = 2 * Math.PI * idx / phi ^ 2;
+                    var tagStr = "";
+                    $.each(post.tags, function (indx, tag) {
+                        tagStr += "#" + tag.keyword;
+                    });
+                    var x = r * Math.cos(theta);
+                    var y = r * Math.sin(theta);
+                    if (i % 2 == 0) x += 5 * i;
+                    else y += 5 * i;
+                    console.log("X: " + x + " Y: " + y);
+                    data.push(makePlotlyObject(x, y, tagStr, post));
+                });
+            });
+            drawToPlotly(data);
+        }
 
         function display(posts) {
             Plotly.purge(gd3);
@@ -128,7 +160,6 @@
             var phi = (Math.sqrt(alpha) + 1) / 2;
             $.each(posts, function (id, post) {
                 var idx = id + 1;
-                var color = categoryToColor[post.category];
                 var r = radius(idx, N, b);
                 var theta = 2 * Math.PI * idx / phi ^ 2;
                 var tagStr = "";
@@ -138,23 +169,88 @@
                 var x = r * Math.cos(theta);
                 var y = r * Math.sin(theta);
                 console.log("X: " + x + " Y: " + y);
-                var object = {
-                    x: [x]
-                    , y: [y]
-                    , type: "scatter"
-                    , name: post.category
-                    , mode: "markers"
-                    , marker: {
-                        size: 24
-                        , color: color
-                    }
-                    , obj: post
-                    , hovertext: post.category + ": " + post.title + " [" + tagStr + "]"
-                    , textposition: 'bottom'
-                    , hoverinfo: "text"
-                };
-                data.push(object);
+                data.push(makePlotlyObject(x, y, tagStr, post));
             });
+            drawToPlotly(data);
+        }
+
+        function getNode() {
+            var d3 = Plotly.d3;
+            var WIDTH_IN_PERCENT_OF_PARENT = 100
+                , HEIGHT_IN_PERCENT_OF_PARENT = 100;
+            var gd3 = d3.selectAll(".responsive-plot").style({
+                width: WIDTH_IN_PERCENT_OF_PARENT + '%'
+                , 'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%'
+                , height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh'
+                , 'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh'
+            });
+            return gd3.node();
+        }
+
+        function groupByCategory() {
+            var dict = {};
+            $.get("/activity", function (posts) {
+                $.each(posts, function (idx, post) {
+                    dict[post.category] = dict[post.category] || [];
+                    dict[post.category].push(post);
+                });
+                displayGrouped(dict);
+            });
+        }
+
+        function groupByTag() {
+            var dict = {};
+            $.get("/activity", function (posts) {
+                $.each(posts, function (id, post) {
+                    $.each(post.tags, function (idx, tag) {
+                        dict[tag.keyword] = dict[tag.keyword] || [];
+                        dict[tag.keyword].push(post);
+                    })
+                });
+                displayGrouped(dict);
+            });
+        }
+
+        function filterByCategory(cat) {
+            $.get("activity/listByCategory/" + cat, function (posts) {
+                display(posts);
+            });
+        }
+
+        function filterByTags(tags) {
+            $.get("/activity/listByTag/" + tags, function (posts) {
+                display(posts);
+            });
+        }
+
+        function radius(k, n, b) {
+            var r = 0;
+            if (k > (n - b)) r = 1;
+            else r = Math.sqrt(k - (1 / 2)) / Math.sqrt(n - (b + 1) / 2);
+            return r;
+        }
+
+        function makePlotlyObject(x, y, tagStr, post) {
+            var color = categoryToColor[post.category];
+            return object = {
+                x: [x]
+                , y: [y]
+                , type: "scatter"
+                , name: post.category
+                , mode: "markers"
+                , marker: {
+                    size: 24
+                    , color: color
+                }
+                , obj: post
+                , hovertext: post.category + ": " + post.title + " [" + tagStr + "]"
+                , textposition: 'bottom'
+                , hoverinfo: "text"
+            };
+        }
+
+        function drawToPlotly(data) {
+            Plotly.purge(gd3);
             var layout = {
                 hovermode: 'closest'
                 , showlegend: false
@@ -204,76 +300,6 @@
                 });
                 requestStr = requestStr.substr(0, requestStr.length - 1);
                 window.location.href = "./EditPost.html" + encodeURI(requestStr);
-            });
-        }
-
-        function getNode() {
-            var d3 = Plotly.d3;
-            var WIDTH_IN_PERCENT_OF_PARENT = 100
-                , HEIGHT_IN_PERCENT_OF_PARENT = 100;
-            var gd3 = d3.selectAll(".responsive-plot").style({
-                width: WIDTH_IN_PERCENT_OF_PARENT + '%'
-                , 'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%'
-                , height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh'
-                , 'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh'
-            });
-            return gd3.node();
-        }
-
-        function groupByCategory(databaseObj) {
-            var dict = {};
-            $.each(databaseObj, function (idx, obj) {
-                dict[obj.category] = dict[obj.category] || [];
-                dict[obj.category].push(obj);
-            });
-            return dict;
-        }
-
-        function groupByTag(databaseObj) {
-            var dict = {};
-            $.each(databaseObj, function (idx, obj) {
-                $.each(obj.tags, function (idx, tag) {
-                    dict[obj.category] = dict[obj.category] || [];
-                    dict[obj.category].push(obj);
-                })
-            });
-            return dict;
-        }
-
-        function filterByCategory(cat) {
-            var grouped = groupByCategory(getAllPosts());
-            var filtered = {};
-            filtered[cat] = [];
-            $.map(grouped, function (value, key) {
-                if (key == cat) filtered[cat] = value;
-            });
-            return filtered;
-        }
-
-        function filterByTags(tags) {
-            var databaseObj = getAllPosts();
-            var filtered = {};
-            $.each(tags, function (idx, tag) {
-                filtered[tag] = [];
-            });
-            $.each(databaseObj, function (idx, obj) {
-                $.each(tags, function (idx, tag) {
-                    if (obj.tags.indexOf(tag) > -1) filtered[tag].push(obj);
-                });
-            });
-            return filtered;
-        }
-
-        function radius(k, n, b) {
-            var r = 0;
-            if (k > (n - b)) r = 1;
-            else r = Math.sqrt(k - (1 / 2)) / Math.sqrt(n - (b + 1) / 2);
-            return r;
-        }
-
-        function getAllPosts() {
-            $.get("/activity", function (data) {
-                return data;
             });
         }
         var colorTablett = ["#2c6fc1", "#5cb85c", "#ffbb33", "#2BBBAD", "#9e9e9e"];
