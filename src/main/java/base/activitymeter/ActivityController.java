@@ -1,10 +1,15 @@
 package base.activitymeter;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -131,6 +136,7 @@ public class ActivityController {
 		*/
 		Activity saved = input;
 		input.setValid(true);
+		System.out.println("-"+input.getImgB64()+ "-");
 		saved = activityRepository.save(saved);
 		
 		if (input.getTags() != null) {
@@ -140,7 +146,6 @@ public class ActivityController {
 				tagRepository.save(new Tag(t.getKeyword(), input));
 		}
 		}
-		activityRepository.findAll().forEach(System.out::println);
 		return HttpStatus.OK;
 	}
 
@@ -158,13 +163,13 @@ public class ActivityController {
 	}
 
 	@RequestMapping(value = "/activity", method = RequestMethod.PUT)
-	public HttpStatus update(@RequestBody Activity input) {
+	public HttpStatus update(@RequestBody Activity input) throws IOException {
 		Activity activity = activityRepository.findOne(input.getId());
 		if(activity != null) {
 			if(activity.checkKey(input.getKey())) {
 				activity.setTitle(input.getTitle());
 				activity.setText(input.getText());
-				activity.setCategory(input.getCategory());
+				activity.setCategory(input.getCategory());		
 				if(input.getTags() != null) {
 					for(Tag t : activity.getTags())
 						tagRepository.delete(t);

@@ -1,8 +1,10 @@
 package base.activitymeter;
 
+import java.sql.Blob;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,6 +32,18 @@ public class Activity {
 	private String title;
 	private String category;
 	private boolean valid;
+	@Column(length=1000000)
+	private String imgB64;
+
+	public String getImgB64() {
+		return imgB64;
+	}
+
+	public void setImgB64(String imgB64) {
+		this.imgB64 = imgB64;
+	}
+
+	
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
 	private Set<Tag> tags;

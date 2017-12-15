@@ -1,103 +1,125 @@
 <!doctype html>
 <html>
 
-<head>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="bootstrap-tagsinput-latest/src/bootstrap-tagsinput.js"></script>
-    <link rel="stylesheet" href="bootstrap-tagsinput-latest/src/bootstrap-tagsinput.css"> </head>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="bootstrap-tagsinput-latest/src/bootstrap-tagsinput.js"></script>
+        <link rel="stylesheet" href="bootstrap-tagsinput-latest/src/bootstrap-tagsinput.css"> </head>
 
-<body>
-    <div class="container">
-        <div class="display-1">
-            <h1>Create new Post</h1>
-            <p>Fill out this formula to create a new post.</p>
-        </div>
-    </div>
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="ID">ID:</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" id="ID" placeholder="Enter ID you received"> </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="title">Title:</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" id="title" placeholder="Enter Title"> </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="text">Text:</label>
-            <div class="col-sm-10">
-                <textarea class="form-control" id="text" placeholder="Enter Text"></textarea>
+    <body>
+        <div class="container">
+            <div class="display-1">
+                <h1>Create new Post</h1>
+                <p>Fill out this formula to create a new post.</p>
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="category">Category:</label>
-            <div class="col-sm-10">
-                <select class="form-control" id="category"> </select>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="ID">ID:</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="ID" placeholder="Enter ID you received"> </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="tag">Tags:</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" id="tag" placeholder="Enter Tags" data-role="tagsinput"> </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="multimedia">Multimedia:</label>
-            <div class="col-sm-10">
-                <form method="post" enctype="multipart/form-data">
-                    <input name="datei" type="file" size="50" accept="text/*"> </form>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="title">Title:</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="title" placeholder="Enter Title"> </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2">
-                <button type="button" class="btn btn-success" id="btnSubmit">Submit</button>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="text">Text:</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" id="text" placeholder="Enter Text"></textarea>
+                </div>
             </div>
-        </div>
-    </form>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $.get("/activity/getCategories", function (categories) {
-                $.each(categories, function (idx, category) {
-                    $("#category").append("<option value=\"" + category + "\">" + category + "</option>");
-                })
-            });
-        });
-        $("#btnSubmit").click(function () {
-            var ID = $("#ID").val();
-            var title = $("#title").val();
-            var text = $("#text").val();
-            var category = $("#category :selected").val();
-            var tags = $("#tag").tagsinput("items");
-            if (ID.length > 0 && title.length > 0 && text.length > 0) checkID(ID, title, text, category, tags);
-            else alert("Please enter ID, title and text.");
-        });
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="category">Category:</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="category"> </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="tag">Tags:</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="tag" placeholder="Enter Tags" data-role="tagsinput"> </div>
+            </div>
 
-        function checkID(ID, title, text, category, tags) {
-            var dat = JSON.stringify({
-                "key": parseInt(ID)
-                , "text": text
-                , "tags": tags
-                , "title": title
-                , "category": category
-            });
-            jQuery.ajax({
-                type: "POST"
-                , contentType: 'application/json; charset=utf-8'
-                , url: "/activity"
-                , dataType: "json"
-                , data: dat
-            }).done(function (data) {
-                if (data != "NOT_FOUND") window.location.href = "./TestPrakt.html";
-                else alert("ID doesn't exist.");
-            });
-        }
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="multimedia">Bild:</label>
+                <div class="col-sm-10">
+                    <form method="post" enctype="multipart/form-data">                    
+                        <input id="files" name="datei" type="file" accept="image/*"> </form>
+                    <output id="list"></output>
+                </div>
+            </div>
 
-        function getCategories() {
-            return ["Teachers", "Enterpreneurship", "Students", "Business"];
-        }
-    </script>
-</body>
+            <div class="form-group">
+                <div class="col-sm-offset-2">
+                    <button type="button" class="btn btn-success" id="btnSubmit">Submit</button>
+                </div>
+            </div>
+        </form>
+
+
+        <script type="text/javascript">
+            var b64;
+
+
+            $(document).ready(function () {
+                $.get("/activity/getCategories", function (categories) {
+                    $.each(categories, function (idx, category) {
+                        $("#category").append("<option value=\"" + category + "\">" + category + "</option>");
+                    })
+                });
+            });
+            $("#btnSubmit").click(function () {
+                var ID = $("#ID").val();
+                var title = $("#title").val();
+                var text = $("#text").val();
+                var category = $("#category :selected").val();
+                var tags = $("#tag").tagsinput("items");
+                if (ID.length > 0 && title.length > 0 && text.length > 0) checkID(ID, title, text, category, tags);
+                else alert("Please enter ID, title and text.");
+            });
+
+            function checkID(ID, title, text, category, tags) {
+                var dat = JSON.stringify({
+                    "key": parseInt(ID)
+                    , "text": text
+                    , "tags": tags
+                    , "title": title
+                    , "category": category
+                    , "imgB64": b64
+                });
+                jQuery.ajax({
+                    type: "POST"
+                    , contentType: 'application/json; charset=utf-8'
+                    , url: "/activity"
+                    , dataType: "json"
+                    , data: dat
+                }).done(function (data) {
+                    if (data != "NOT_FOUND") window.location.href = "./TestPrakt.html";
+                    else alert("ID doesn't exist.");
+                });
+            }
+
+            function getCategories() {
+                return ["Teachers", "Enterpreneurship", "Students", "Business"];
+            }
+
+            function handleFileSelect(evt) {
+                var files = evt.target.files; 
+                for (var i = 0, f; f = files[i]; i++) {
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        b64 = event.target.result;
+                    };        
+                    reader.readAsDataURL(document.getElementById('files').files[0]);    
+                }
+            }
+            document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+        </script>
+    </body>
 
 </html>
