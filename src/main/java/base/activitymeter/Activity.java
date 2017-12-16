@@ -32,7 +32,7 @@ public class Activity {
 	private String title;
 	private String category;
 	private boolean valid;
-	@Column(length=1000000)
+	@Column(length=1000000000)
 	private String imgB64;
 
 	public String getImgB64() {
@@ -43,8 +43,6 @@ public class Activity {
 		this.imgB64 = imgB64;
 	}
 
-	
-
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
 	private Set<Tag> tags;
 
@@ -52,11 +50,12 @@ public class Activity {
 
 	}
 
-	public Activity(long key, String text, String title, String category) {
+	public Activity(long key, String text, String title, String category, String imgB64) {
 		this.key = key;
 		this.text = text;
 		this.title = title;
 		this.category = category;
+		this.imgB64 = imgB64;
 		valid = false;
 	}
 

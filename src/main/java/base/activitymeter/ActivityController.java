@@ -111,13 +111,13 @@ public class ActivityController {
 
 	@RequestMapping(value = "/activity", method = RequestMethod.POST)
 	public HttpStatus create(@RequestBody Activity input) {
-		/*
 		boolean[] foundOne = new boolean[] {false};
 		activityRepository.findAll().forEach(act ->{
 			if(act.getKey() == input.getKey()) {
 				act.setText(input.getText());
 				act.setTitle(input.getTitle());
 				act.setCategory(input.getCategory());
+				act.setImgB64(input.getImgB64());
 				if (input.getTags() != null) {
 					act.setTags(input.getTags());
 					for (Tag t : input.getTags()) {
@@ -133,10 +133,9 @@ public class ActivityController {
 		});
 		activityRepository.findAll().forEach(System.out::println);
 		return foundOne[0] ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-		*/
+		/*
 		Activity saved = input;
 		input.setValid(true);
-		System.out.println("-"+input.getImgB64()+ "-");
 		saved = activityRepository.save(saved);
 		
 		if (input.getTags() != null) {
@@ -144,9 +143,10 @@ public class ActivityController {
 				saved.addTag(t);
 				tagRepository.delete(t);
 				tagRepository.save(new Tag(t.getKeyword(), input));
-		}
+			}
 		}
 		return HttpStatus.OK;
+		*/
 	}
 
 	@RequestMapping(value = "/activity/{id}/{key}", method = RequestMethod.DELETE)
@@ -169,7 +169,8 @@ public class ActivityController {
 			if(activity.checkKey(input.getKey())) {
 				activity.setTitle(input.getTitle());
 				activity.setText(input.getText());
-				activity.setCategory(input.getCategory());		
+				activity.setCategory(input.getCategory());
+				activity.setImgB64(input.getImgB64());
 				if(input.getTags() != null) {
 					for(Tag t : activity.getTags())
 						tagRepository.delete(t);
@@ -198,7 +199,7 @@ public class ActivityController {
 			unique = (activityRepository.findIdByKey(key).isEmpty());
 		}
 
-		activityRepository.save(new Activity(key, "", "",""));
+		activityRepository.save(new Activity(key, "", "","",""));
 
 		ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
 

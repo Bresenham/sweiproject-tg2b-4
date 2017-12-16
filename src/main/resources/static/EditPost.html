@@ -38,10 +38,16 @@
             <div class="col-sm-10">
                 <input type="email" class="form-control" id="tag" placeholder="Enter Tags" data-role="tagsinput" disabled="true"> </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="viewImgGroup">
             <label class="control-label col-sm-2" for="img">Bild:</label>
+            <div class="col-sm-10" id="imgAppend"></div>
+        </div>
+        <div class="form-group" id="editImgGroup">
+            <label class="control-label col-sm-2" for="multimedia">Bild:</label>
             <div class="col-sm-10">
-               <img id="img" src="x.jpg" alt="Kein Bild vorhanden.">
+                <form method="post" enctype="multipart/form-data">
+                    <input id="files" name="datei" type="file" accept="image/*"> </form>
+                <output id="list"></output>
             </div>
         </div>
         <div class="form-group">
@@ -54,20 +60,23 @@
     </form>
     <script type="text/javascript">
         var userInputKey = "-1";
+        var b64 = "";
         $(document).ready(function () {
+            $("#editImgGroup").hide();
             $.get("/activity/getCategories", function (categories) {
                 $.each(categories, function (idx, category) {
                     $("#category").append("<option value=\"" + category + "\">" + category + "</option>");
                 })
-                $("#category").val(getUrlParameter("category"));
+                $.get("/activity/find/" + getUrlParameter("id"), function (post) {
+                    $("#title").val(post.title);
+                    $("#text").val(post.text);
+                    $("#category").val(post.category);
+                    $.each(post.tags, function (idx, tag) {
+                        $("#tag").tagsinput("add", tag.keyword);
+                    })
+                    $("#imgAppend").append("<img id='img' src='" + post.imgB64 + "' width='720'>");
+                });
             });
-            $("#title").val(getUrlParameter("title"));
-            $("#text").val(getUrlParameter("text"));
-            $.each(getUrlParameter("tags").split(","), function (idx, tag) {
-                $("#tag").tagsinput("add", tag);
-            });
-            $document.getElementById('img').src=getUrlParameter("imgB64");
-            
         });
         $("#btnEdit").click(function () {
             var userInput = prompt("Enter ID for this post:");
@@ -97,6 +106,7 @@
                     $("#btnDelete").prop("disabled", false);
                     $("#btnEdit").prop("disabled", true);
                     userInputKey = key;
+                    $("#editImgGroup").show();
                 }
                 else {
                     alert("ID does not belong to this post.")
@@ -113,6 +123,7 @@
                     , "tags": tags
                     , "title": title
                     , "category": category
+                    , "imgB64": b64
                 });
                 jQuery.ajax({
                     type: "PUT"
@@ -154,6 +165,18 @@
                 }
             }
         };
+
+        function handleFileSelect(evt) {
+            var files = evt.target.files;
+            for (var i = 0, f; f = files[i]; i++) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    b64 = event.target.result;
+                };
+                reader.readAsDataURL(document.getElementById('files').files[0]);
+            }
+        }
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
     </script>
 </body>
 

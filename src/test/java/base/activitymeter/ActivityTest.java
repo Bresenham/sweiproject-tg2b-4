@@ -33,7 +33,7 @@ public class ActivityTest {
   }
   @Test(timeout = 1_000) public void activityDefaultValidTest() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
       boolean want = false;
       // act
       boolean have = sut.getValid();
@@ -42,7 +42,7 @@ public class ActivityTest {
   }  
   @Test(timeout = 1_000) public void activityChangeValidTest() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
       sut.setValid(true);
       boolean want = true;
       // act
@@ -52,7 +52,7 @@ public class ActivityTest {
   }  
   @Test(timeout = 1_000) public void activityCheckKeyTrue() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
       boolean want = true;
       // act
       boolean have = sut.checkKey(365);
@@ -61,7 +61,7 @@ public class ActivityTest {
   }  
   @Test(timeout = 1_000) public void activityCheckKeyFalse() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
       boolean want = false;
       // act
       boolean have = sut.checkKey(10056);

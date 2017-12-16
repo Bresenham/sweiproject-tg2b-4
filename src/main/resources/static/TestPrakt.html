@@ -284,21 +284,7 @@
                     pts = 'x = ' + data.points[i].x + '\ny = ' + data.points[i].y.toPrecision(4) + '\n\n';
                     point = data.points[i];
                 }
-                var requestStr = "?";
-                $.each(point.data.obj, function (key, value) {
-                    if (typeof value == "object") {
-                        requestStr += key + "=";
-                        $.each(value, function (idx, tag) {
-                            requestStr += tag.keyword + ",";
-                        });
-                        requestStr = requestStr.substr(0, requestStr.length - 1);
-                        requestStr += "&";
-                    }
-                    else {
-                        if (key != "key") requestStr = requestStr + key + "=" + value + "&";
-                    }
-                });
-                requestStr = requestStr.substr(0, requestStr.length - 1);
+                var requestStr = "?id=" + point.data.obj.id;
                 window.location.href = "./EditPost.html" + encodeURI(requestStr);
             });
         }
