@@ -74,8 +74,12 @@
                     $.each(post.tags, function (idx, tag) {
                         $("#tag").tagsinput("add", tag.keyword);
                     })
-                    if (post.imgB64 != null) $("#imgAppend").append("<img id='img' src='" + post.imgB64 + "' width='720' class='img-thumbnail'>");
-                    else $("#viewImgGroup").hide();
+                    if (post.imgB64 != null) {
+                        if (post.imgB64.length > 0) $("#imgAppend").append("<img id='img' src='" + post.imgB64 + "' width='720' class='img-thumbnail'>");
+                        else $("#viewImgGroup").hide();
+                    } {
+                        else $("#viewImgGroup").hide();
+                    }
                 });
             });
         });
