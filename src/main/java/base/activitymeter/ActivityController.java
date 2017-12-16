@@ -111,6 +111,7 @@ public class ActivityController {
 
 	@RequestMapping(value = "/activity", method = RequestMethod.POST)
 	public HttpStatus create(@RequestBody Activity input) {
+
 		boolean[] foundOne = new boolean[] {false};
 		activityRepository.findAll().forEach(act ->{
 			if(act.getKey() == input.getKey()) {
@@ -133,6 +134,7 @@ public class ActivityController {
 		});
 		activityRepository.findAll().forEach(System.out::println);
 		return foundOne[0] ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+
 		/*
 		Activity saved = input;
 		input.setValid(true);

@@ -39,11 +39,11 @@
                 <input type="email" class="form-control" id="tag" placeholder="Enter Tags" data-role="tagsinput" disabled="true"> </div>
         </div>
         <div class="form-group" id="viewImgGroup">
-            <label class="control-label col-sm-2" for="img">Bild:</label>
+            <label class="control-label col-sm-2" for="img">Image:</label>
             <div class="col-sm-10" id="imgAppend"></div>
         </div>
         <div class="form-group" id="editImgGroup">
-            <label class="control-label col-sm-2" for="multimedia">Bild:</label>
+            <label class="control-label col-sm-2" for="multimedia">Image:</label>
             <div class="col-sm-10">
                 <form method="post" enctype="multipart/form-data">
                     <input id="files" name="datei" type="file" accept="image/*"> </form>
@@ -74,7 +74,8 @@
                     $.each(post.tags, function (idx, tag) {
                         $("#tag").tagsinput("add", tag.keyword);
                     })
-                    $("#imgAppend").append("<img id='img' src='" + post.imgB64 + "' width='720'>");
+                    if (post.imgB64 != null) $("#imgAppend").append("<img id='img' src='" + post.imgB64 + "' width='720' class='img-thumbnail'>");
+                    else $("#viewImgGroup").hide();
                 });
             });
         });
