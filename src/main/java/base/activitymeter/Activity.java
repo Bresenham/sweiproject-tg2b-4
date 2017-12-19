@@ -1,6 +1,5 @@
 package base.activitymeter;
 
-import java.sql.Blob;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,16 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-/*
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-*/
 @Entity
 @Table(name = "activity")
 public class Activity {
 
-	private static final long AdminKey = 999999;
+	private static final long ADMIN_KEY = 999999;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -113,7 +107,7 @@ public class Activity {
 	
 	public boolean checkKey(long testKey) {
 		// Hier auch Admin-Key akzeptieren.
-		return (testKey == getKey() || testKey == AdminKey);
+		return (testKey == getKey() || testKey == ADMIN_KEY);
 	}
 
 	public void addTag(Tag t) {
@@ -138,37 +132,4 @@ public class Activity {
 		}
 		return containsTag;
 	}
-
-	/*
-	public String toString() {
-		String info = "";
-		try {
-			JSONObject jsonInfo = new JSONObject();
-			jsonInfo.put("key", this.key);
-			jsonInfo.put("text", this.text);
-			jsonInfo.put("title", this.title);
-			jsonInfo.put("valid", this.valid);
-
-			JSONArray tagArray = new JSONArray();
-			if (this.tags != null) {
-				this.tags.forEach(tag -> {
-					JSONObject subJson = new JSONObject();
-					try {
-						subJson.put("keyword", tag.getKeyword());
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					tagArray.put(subJson);
-				});
-			}
-			jsonInfo.put("tags", tagArray);
-			info = jsonInfo.toString();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return info;
-
-	}
-	*/
 }
