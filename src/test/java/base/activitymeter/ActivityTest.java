@@ -1,6 +1,9 @@
 package base.activitymeter;
 
 import org.junit.Test;
+
+import java.util.Set;
+
 import org.junit.Assert;
 
 import com.openpojo.reflection.PojoClass;
@@ -68,4 +71,67 @@ public class ActivityTest {
       // assert
       Assert.assertEquals(want, have);
   }  
+  @Test(timeout = 1_000) public void activityCheckAdminKeyTrue() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      boolean want = true;
+      // act
+      boolean have = sut.checkKey(999999);
+      // assert
+      Assert.assertEquals(want, have);
+  }
+  @Test(timeout = 1_000) public void activityCheckIdTrue()
+  {
+	  // arrange
+	  Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      boolean want = true;
+      // act
+      boolean have = sut.checkId(365);
+      // assert
+      Assert.assertEquals(want, have);
+  }
+  @Test(timeout = 1_000) public void activityCheckIdFalse()
+  {
+	  // arrange
+	  Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      boolean want = false;
+      // act
+      boolean have = sut.checkId(200);
+      // assert
+      Assert.assertEquals(want, have);
+  }  
+  @Test(timeout = 1_000) public void activityAddTag() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      Tag toAdd = new Tag("Heute");
+      Set<Tag> want = sut.getTags();
+      want.add(toAdd);
+      // act
+      sut.addTag(toAdd);
+      Set<Tag> have = sut.getTags();
+      // assert
+      Assert.assertEquals(want, have);
+  } 
+  @Test(timeout = 1_000) public void activityContainsTagTrue() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      String toCheck = "Heute";
+      boolean want = true;
+      // act
+      sut.addTag(new Tag(toCheck));
+      boolean have = sut.containsTag(toCheck);
+      // assert
+      Assert.assertEquals(want, have);
+  } 
+  @Test(timeout = 1_000) public void activityContainsTagFalse() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      String toCheck = "Heute";
+      boolean want = false;
+      // act
+      sut.addTag(new Tag(toCheck));
+      boolean have = sut.containsTag("Morgen");
+      // assert
+      Assert.assertEquals(want, have);
+  }
 }
