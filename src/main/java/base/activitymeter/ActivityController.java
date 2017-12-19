@@ -1,25 +1,15 @@
 package base.activitymeter;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,7 +35,7 @@ public class ActivityController {
 	}
 
 	@RequestMapping(value = "/activity", method = RequestMethod.GET)
-	public ArrayList<Activity> listAll() {
+	public List<Activity> listAll() {
 		ArrayList<Activity> activities = new ArrayList<>();
 		activityRepository.findAll().forEach(activity -> {
 			if (activity.getValid())
@@ -61,17 +51,14 @@ public class ActivityController {
 	
 	@RequestMapping(value= "/activity/findByKey/{id}/{key}", method = RequestMethod.GET)
 	public Activity findByKey(@PathVariable Long id, @PathVariable Long key) {
-		Activity[] act = new Activity[] {null};
 		Activity acti = activityRepository.findOne(id);
-		if(acti != null) {
-			if(acti.checkKey(key)) {
-				return acti;
-			}
+		if(acti != null && acti.checkKey(key)) {
+			return acti;
 		}
 		return null;
 	}
 	@RequestMapping(value = "/activity/listByTag/{tagSearch}", method = RequestMethod.GET)
-	public ArrayList<Activity> listByTag(@PathVariable String tagSearch) {
+	public List<Activity> listByTag(@PathVariable String tagSearch) {
 		String[] tags = tagSearch.split(",");
 		ArrayList<Activity> activities = new ArrayList<>();
 		activityRepository.findAll().forEach(acti -> {
@@ -85,7 +72,7 @@ public class ActivityController {
 		return activities;
 	}
 	@RequestMapping(value = "/activity/listByCategory/{category}",method=RequestMethod.GET)
-	public ArrayList<Activity> listByCategory(@PathVariable String category){
+	public List<Activity> listByCategory(@PathVariable String category){
 		ArrayList<Activity> activities = new ArrayList<>();
 		activityRepository.findAll().forEach(acti -> {
 			if(acti.getCategory().equals(category))
@@ -95,7 +82,7 @@ public class ActivityController {
 	}
 
 	@RequestMapping(value = "/activity/allValid/{valid}", method = RequestMethod.GET)
-	public ArrayList<Activity> listAll(@PathVariable boolean valid) {
+	public List<Activity> listAll(@PathVariable boolean valid) {
 		ArrayList<Activity> activities = new ArrayList<>();
 		activityRepository.findAll().forEach(activity -> {
 			if (activity.getValid() == valid)
@@ -106,7 +93,7 @@ public class ActivityController {
 	
 	@RequestMapping(value = "/activity/getCategories", method = RequestMethod.GET)
 	public List<String> getCategories(){
-		return Arrays.asList(new String[] {"Students","Teachers","Travelling","Business","Enterpreneurship"});
+		return Arrays.asList("Students","Teachers","Travelling","Business","Enterpreneurship");
 	}
 
 	@RequestMapping(value = "/activity", method = RequestMethod.POST)
@@ -154,37 +141,33 @@ public class ActivityController {
 	@RequestMapping(value = "/activity/{id}/{key}", method = RequestMethod.DELETE)
 	public HttpStatus delete(@PathVariable Long id, @PathVariable Long key) {
 		Activity activity = activityRepository.findOne(id);
-		if (activity != null) {
-			if(activity.checkKey(key)) {
-				activity.setValid(false);
-				activityRepository.save(activity);
-				return HttpStatus.OK;
-			}
+		if (activity != null && activity.checkKey(key)) {
+			activity.setValid(false);
+			activityRepository.save(activity);
+			return HttpStatus.OK;
 		}
 		return HttpStatus.NOT_FOUND;
 	}
 
 	@RequestMapping(value = "/activity", method = RequestMethod.PUT)
-	public HttpStatus update(@RequestBody Activity input) throws IOException {
+	public HttpStatus update(@RequestBody Activity input) {
 		Activity activity = activityRepository.findOne(input.getId());
-		if(activity != null) {
-			if(activity.checkKey(input.getKey())) {
-				activity.setTitle(input.getTitle());
-				activity.setText(input.getText());
-				activity.setCategory(input.getCategory());
-				activity.setImgB64(input.getImgB64());
-				if(input.getTags() != null) {
-					for(Tag t : activity.getTags())
-						tagRepository.delete(t);
-					activity.setTags(input.getTags());
-					for (Tag t : input.getTags()) {
-						activity.addTag(t);
-						tagRepository.delete(t);
-						tagRepository.save(new Tag(t.getKeyword(), activity));
-					}
+		if(activity != null && activity.checkKey(input.getKey())) {
+			activity.setTitle(input.getTitle());
+			activity.setText(input.getText());
+			activity.setCategory(input.getCategory());
+			activity.setImgB64(input.getImgB64());
+			if(input.getTags() != null) {
+				for(Tag t : activity.getTags())
+					tagRepository.delete(t);
+				activity.setTags(input.getTags());
+				for (Tag t : input.getTags()) {
+					activity.addTag(t);
+					tagRepository.delete(t);
+					tagRepository.save(new Tag(t.getKeyword(), activity));
 				}
-				return HttpStatus.OK;
 			}
+			return HttpStatus.OK;
 		}
 		return HttpStatus.NOT_FOUND;
 	}
