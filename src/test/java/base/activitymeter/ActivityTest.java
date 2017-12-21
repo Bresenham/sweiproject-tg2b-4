@@ -2,6 +2,7 @@ package base.activitymeter;
 
 import org.junit.Test;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -86,7 +87,7 @@ public class ActivityTest {
 	  Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
       boolean want = true;
       // act
-      boolean have = sut.checkId(365);
+      boolean have = sut.checkKey(365);
       // assert
       Assert.assertEquals(want, have);
   }
@@ -104,10 +105,10 @@ public class ActivityTest {
       // arrange
       Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
       Tag toAdd = new Tag("Heute");
-      Set<Tag> want = sut.getTags();
+      Set<Tag> want = new HashSet<>();
       want.add(toAdd);
       // act
-      sut.addTag(toAdd);
+      sut.setTags(want);
       Set<Tag> have = sut.getTags();
       // assert
       Assert.assertEquals(want, have);
@@ -116,9 +117,11 @@ public class ActivityTest {
       // arrange
       Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
       String toCheck = "Heute";
+      Set<Tag> set = new HashSet<>();
+      set.add(new Tag(toCheck));
       boolean want = true;
       // act
-      sut.addTag(new Tag(toCheck));
+      sut.setTags(set);
       boolean have = sut.containsTag(toCheck);
       // assert
       Assert.assertEquals(want, have);
@@ -127,9 +130,11 @@ public class ActivityTest {
       // arrange
       Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
       String toCheck = "Heute";
+      Set<Tag> set = new HashSet<>();
+      set.add(new Tag(toCheck));
       boolean want = false;
       // act
-      sut.addTag(new Tag(toCheck));
+      sut.setTags(set);
       boolean have = sut.containsTag("Morgen");
       // assert
       Assert.assertEquals(want, have);
