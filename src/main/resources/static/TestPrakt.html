@@ -14,7 +14,7 @@
             <!-- Sidebar Header -->
             <div class="sidebar-header">
                 <h2>Activity Meter</h2>
-                <h4></h4> </div>
+                <h4><img src="logo.png"></h4> </div>
             <!-- Sidebar Links -->
             <ul class="list-unstyled components">
                 <li><a href="#" id="defaultView">Home</a></li>
@@ -151,6 +151,36 @@
             drawToPlotly(data);
         }
 
+        function displayGroupedTags(posts) {
+            var data = [];
+            var N = $.map(posts, function (n, i) {
+                return i;
+            }).length;
+            var angleCuts = (360.0 / (Object.keys(posts).length) + 1);
+            console.log("Angle Cuts: " + angleCuts);
+            $.each(Object.keys(posts), function (i, key) {
+                var angleInRad = (angleCuts * (i + 1)) * (Math.PI / 180.0);
+                var counter = 1;
+                data.push(makePlotlyObject(Math.sin(angleInRad) * 0.25, Math.cos(angleInRad) * 0.25, "Pointer", {
+                    "category": "Points to "
+                    , "title": key
+                }, '#' + Math.floor(Math.random() * 16777215).toString(16)));
+                $.each(posts[key], function (id, post) {
+                    var idx = id + 1;
+                    var tagStr = "";
+                    $.each(post.tags, function (indx, tag) {
+                        tagStr += "#" + tag.keyword;
+                    });
+                    var x = Math.sin(angleInRad) * counter;
+                    var y = Math.cos(angleInRad) * counter;
+                    console.log("X: " + x + " Y: " + y);
+                    counter += 1;
+                    data.push(makePlotlyObject(x, y, tagStr, post));
+                });
+            });
+            drawToPlotly(data);
+        }
+
         function display(posts) {
             Plotly.purge(gd3);
             var data = [];
@@ -207,7 +237,7 @@
                         dict[tag.keyword].push(post);
                     })
                 });
-                displayGrouped(dict);
+                displayGroupedTags(dict);
             });
         }
 
@@ -230,8 +260,8 @@
             return r;
         }
 
-        function makePlotlyObject(x, y, tagStr, post) {
-            var color = categoryToColor[post.category];
+        function makePlotlyObject(x, y, tagStr, post, colorOverride) {
+            var color = colorOverride !== undefined ? colorOverride : categoryToColor[post.category];
             return object = {
                 x: [x]
                 , y: [y]

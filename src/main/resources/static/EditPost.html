@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="bootstrap-tagsinput-latest/src/bootstrap-tagsinput.css"> </head>
 
 <body>
-    <div class="container">
-        <div class="display-1">
-            <h1>Overview</h1>
-            <p>You can edit this post if you enter the correct ID.</p>
-        </div>
-    </div>
     <form class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-2 h2" for="ID"> <a href="./TestPrakt.html" class="btn btn-info">Back</a> </label>
+            <div class="col-sm-10">
+                <label class="control-label h2" for="header">Overview</label>
+            </div>
+        </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="title">Title:</label>
             <div class="col-sm-10">
@@ -40,7 +40,10 @@
         </div>
         <div class="form-group" id="viewImgGroup">
             <label class="control-label col-sm-2" for="img">Image:</label>
-            <div class="col-sm-10" id="imgAppend"></div>
+            <div class="col-sm-10" id="imgAppend">
+                <div id="addImageHere"></div>
+                <button type="button" class="btn btn-danger" id="btnRemoveImage">X</button>
+            </div>
         </div>
         <div class="form-group" id="editImgGroup">
             <label class="control-label col-sm-2" for="multimedia">Image:</label>
@@ -61,8 +64,10 @@
     <script type="text/javascript">
         var userInputKey = "-1";
         var b64 = "";
+        var removeCurrentImage = false;
         $(document).ready(function () {
             $("#editImgGroup").hide();
+            $("#btnRemoveImage").hide();
             $.get("/activity/getCategories", function (categories) {
                 $.each(categories, function (idx, category) {
                     $("#category").append("<option value=\"" + category + "\">" + category + "</option>");
@@ -71,16 +76,24 @@
                     $("#title").val(post.title);
                     $("#text").val(post.text);
                     $("#category").val(post.category);
+                    b64 = post.imgB64;
                     $.each(post.tags, function (idx, tag) {
                         $("#tag").tagsinput("add", tag.keyword);
                     })
                     if (post.imgB64 != null) {
-                        if (post.imgB64.length > 0) $("#imgAppend").append("<img id='img' src='" + post.imgB64 + "' width='720' class='img-thumbnail'>");
+                        if (post.imgB64.length > 0) $("#addImageHere").append("<img id='img' src='" + post.imgB64 + "' width='720' class='img-thumbnail'>");
                         else $("#viewImgGroup").hide();
                     }
                     else $("#viewImgGroup").hide();
                 });
             });
+        });
+        $("#btnRemoveImage").click(function () {
+            var conf = confirm("Do you really want to delete this image?");
+            if (conf) {
+                b64 = "";
+                $("#viewImgGroup").hide();
+            }
         });
         $("#btnEdit").click(function () {
             var userInput = prompt("Enter ID for this post:");
@@ -111,6 +124,7 @@
                     $("#btnEdit").prop("disabled", true);
                     userInputKey = key;
                     $("#editImgGroup").show();
+                    $("#btnRemoveImage").show();
                 }
                 else {
                     alert("ID does not belong to this post.")
