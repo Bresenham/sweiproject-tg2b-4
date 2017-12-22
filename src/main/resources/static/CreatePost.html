@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="bootstrap-tagsinput-latest/src/bootstrap-tagsinput.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
     <link rel="stylesheet" href="bootstrap-tagsinput-latest/src/bootstrap-tagsinput.css">
     <style type="text/css">
         .spinner {
@@ -96,6 +97,11 @@
                 <input type="email" class="form-control" id="tag" placeholder="Enter Tags" data-role="tagsinput"> </div>
         </div>
         <div class="form-group">
+            <label class="control-label col-sm-2" for="ytbLink">YouTube Link:</label>
+            <div class="col-sm-10">
+                <input type="search" class="form-control" id="ytbLink" placeholder="Enter YouTube Link"> <em id="ytbTitle"></em> </div>
+        </div>
+        <div class="form-group">
             <label class="control-label col-sm-2" for="multimedia">Image:</label>
             <div class="col-sm-10">
                 <form method="post" enctype="multipart/form-data">
@@ -116,7 +122,10 @@
     </form>
     <script type="text/javascript">
         var b64;
+        var validYtb = true;
         $(document).ready(function () {
+            // 1. Load the JavaScript client library.
+            gapi.load('client', start);
             $(".spinner").hide();
             $.get("/activity/getCategories", function (categories) {
                 $.each(categories, function (idx, category) {
@@ -130,17 +139,57 @@
             var text = $("#text").val();
             var category = $("#category :selected").val();
             var tags = $("#tag").tagsinput("items");
-            if (ID.length > 0 && title.length > 0 && text.length > 0) checkID(ID, title, text, category, tags);
-            else alert("Please enter ID, title and text.");
+            if (ID.length > 0 && title.length > 0 && text.length > 0 && validYtb) {
+                checkID(ID, title, text, category, tags, $("#ytbLink").val());
+            }
+            else alert("Please enter ID, title, text and a valid (or none) YouTube link.");
+        });
+        $('#ytbLink').on('input', function (e) {
+            var inp = $("#ytbLink").val();
+            validYtb = inp.length == 0;
+            var key = getUrlParameter(inp, "v");
+            if (key !== undefined) {
+                start(key);
+            }
+            else {
+                var text = inp.length == 0 ? "" : "Video not found";
+                $("#ytbTitle").html(text);
+            }
         });
 
-        function checkID(ID, title, text, category, tags) {
+        function start(key) {
+            // 2. Initialize the JavaScript client library.
+            gapi.client.init({
+                'apiKey': 'AIzaSyDHkJmly-UkzRJ-864R52NRS-aHGcmBRvM' // clientId and scope are optional if auth is not required.
+                    
+            , }).then(function () {
+                // 3. Initialize and make the API request.
+                return gapi.client.request({
+                    'path': "https://www.googleapis.com/youtube/v3/videos?id=" + key + "&key=AIzaSyAvobhiovnHsxB4sC8yh-dX6hopzw_JAPQ&part=snippet"
+                , })
+            }).then(function (response) {
+                if (response.result.items.length > 0) {
+                    $("#ytbTitle").html(response.result.items[0].snippet.title);
+                    validYtb = true;
+                }
+                else {
+                    var text = $("#ytbLink").val().length == 0 ? "" : "Video not found";
+                    $("#ytbTitle").html(text);
+                    validYtb = $("#ytbLink").val().length == 0;
+                }
+            }, function (reason) {
+                console.log('Error: ' + reason.result.error.message);
+            });
+        };
+
+        function checkID(ID, title, text, category, tags, ytbLink) {
             var dat = JSON.stringify({
                 "key": parseInt(ID)
                 , "text": text
                 , "tags": tags
                 , "title": title
                 , "category": category
+                , "ytbLink": ytbLink
                 , "imgB64": b64
             });
             $(".spinner").show();
@@ -158,6 +207,18 @@
                 }
             });
         }
+
+        function getUrlParameter(uri, sParam) {
+            var sPageURL = uri
+                , sURLVariables = sPageURL.split('?').splice("&")
+                , sParameterName, i;
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
 
         function handleFileSelect(evt) {
             var files = evt.target.files;

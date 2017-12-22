@@ -145,7 +145,7 @@
                     if (i % 2 == 0) x += 5 * i;
                     else y += 5 * i;
                     console.log("X: " + x + " Y: " + y);
-                    data.push(makePlotlyObject(x, y, tagStr, post));
+                    data.push(makePlotlyObject(x, y, tagStr, post, 24));
                 });
             });
             drawToPlotly(data);
@@ -161,10 +161,10 @@
             $.each(Object.keys(posts), function (i, key) {
                 var angleInRad = (angleCuts * (i + 1)) * (Math.PI / 180.0);
                 var counter = 1;
-                data.push(makePlotlyObject(Math.sin(angleInRad) * 0.25, Math.cos(angleInRad) * 0.25, "Pointer", {
+                data.push(makePlotlyObject(Math.sin(angleInRad) * 0.75, Math.cos(angleInRad) * 0.75, "Pointer", {
                     "category": "Points to "
                     , "title": key
-                }, '#' + Math.floor(Math.random() * 16777215).toString(16)));
+                }, 12, '#000000'));
                 $.each(posts[key], function (id, post) {
                     var idx = id + 1;
                     var tagStr = "";
@@ -175,7 +175,7 @@
                     var y = Math.cos(angleInRad) * counter;
                     console.log("X: " + x + " Y: " + y);
                     counter += 1;
-                    data.push(makePlotlyObject(x, y, tagStr, post));
+                    data.push(makePlotlyObject(x, y, tagStr, post, 24));
                 });
             });
             drawToPlotly(data);
@@ -199,7 +199,7 @@
                 var x = r * Math.cos(theta);
                 var y = r * Math.sin(theta);
                 console.log("X: " + x + " Y: " + y);
-                data.push(makePlotlyObject(x, y, tagStr, post));
+                data.push(makePlotlyObject(x, y, tagStr, post, 24));
             });
             drawToPlotly(data);
         }
@@ -260,7 +260,7 @@
             return r;
         }
 
-        function makePlotlyObject(x, y, tagStr, post, colorOverride) {
+        function makePlotlyObject(x, y, tagStr, post, size, colorOverride) {
             var color = colorOverride !== undefined ? colorOverride : categoryToColor[post.category];
             return object = {
                 x: [x]
@@ -269,7 +269,7 @@
                 , name: post.category
                 , mode: "markers"
                 , marker: {
-                    size: 24
+                    size: size
                     , color: color
                 }
                 , obj: post

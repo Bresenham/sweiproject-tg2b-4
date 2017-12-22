@@ -37,7 +37,7 @@ public class ActivityTest {
   }
   @Test(timeout = 1_000) public void activityDefaultValidTest() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       boolean want = false;
       // act
       boolean have = sut.getValid();
@@ -46,7 +46,7 @@ public class ActivityTest {
   }  
   @Test(timeout = 1_000) public void activityChangeValidTest() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       sut.setValid(true);
       boolean want = true;
       // act
@@ -56,7 +56,7 @@ public class ActivityTest {
   }  
   @Test(timeout = 1_000) public void activityCheckKeyTrue() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       boolean want = true;
       // act
       boolean have = sut.checkKey(365);
@@ -65,7 +65,7 @@ public class ActivityTest {
   }  
   @Test(timeout = 1_000) public void activityCheckKeyFalse() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       boolean want = false;
       // act
       boolean have = sut.checkKey(10056);
@@ -74,7 +74,7 @@ public class ActivityTest {
   }  
   @Test(timeout = 1_000) public void activityCheckAdminKeyTrue() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       boolean want = true;
       // act
       boolean have = sut.checkKey(999999);
@@ -84,7 +84,7 @@ public class ActivityTest {
   @Test(timeout = 1_000) public void activityCheckIdTrue()
   {
 	  // arrange
-	  Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+	  Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       boolean want = true;
       // act
       boolean have = sut.checkKey(365);
@@ -94,7 +94,7 @@ public class ActivityTest {
   @Test(timeout = 1_000) public void activityCheckIdFalse()
   {
 	  // arrange
-	  Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+	  Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       boolean want = false;
       // act
       boolean have = sut.checkId(200);
@@ -103,7 +103,7 @@ public class ActivityTest {
   }  
   @Test(timeout = 1_000) public void activityAddTag() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       Tag toAdd = new Tag("Heute");
       Set<Tag> want = new HashSet<>();
       want.add(toAdd);
@@ -115,7 +115,7 @@ public class ActivityTest {
   } 
   @Test(timeout = 1_000) public void activityContainsTagTrue() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       String toCheck = "Heute";
       Set<Tag> set = new HashSet<>();
       set.add(new Tag(toCheck));
@@ -128,7 +128,7 @@ public class ActivityTest {
   } 
   @Test(timeout = 1_000) public void activityContainsTagFalse() {
       // arrange
-      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","");
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
       String toCheck = "Heute";
       Set<Tag> set = new HashSet<>();
       set.add(new Tag(toCheck));

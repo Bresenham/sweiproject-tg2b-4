@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="bootstrap-tagsinput-latest/src/bootstrap-tagsinput.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
     <link rel="stylesheet" href="bootstrap-tagsinput-latest/src/bootstrap-tagsinput.css"> </head>
 
 <body>
@@ -38,6 +39,13 @@
             <div class="col-sm-10">
                 <input type="email" class="form-control" id="tag" placeholder="Enter Tags" data-role="tagsinput" disabled="true"> </div>
         </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="ytbLink">YouTube Link:</label>
+            <div class="col-sm-10" id="ytbIFrameAdd">
+                <input type="search" class="form-control" id="ytbLink" placeholder="Enter YouTube Link" disabled="true"> <em id="ytbTitle"></em>
+                <div id="ytbIFramePlaceholder"></div>
+            </div>
+        </div>
         <div class="form-group" id="viewImgGroup">
             <label class="control-label col-sm-2" for="img">Image:</label>
             <div class="col-sm-10" id="imgAppend">
@@ -65,7 +73,10 @@
         var userInputKey = "-1";
         var b64 = "";
         var removeCurrentImage = false;
+        var validYtb = true;
         $(document).ready(function () {
+            // 1. Load the JavaScript client library.
+            gapi.load('client', start);
             $("#editImgGroup").hide();
             $("#btnRemoveImage").hide();
             $.get("/activity/getCategories", function (categories) {
@@ -76,6 +87,11 @@
                     $("#title").val(post.title);
                     $("#text").val(post.text);
                     $("#category").val(post.category);
+                    $("#ytbLink").val(post.ytbLink);
+                    $("#ytbLink").trigger("input");
+                    if (post.ytbLink.length > 0) {
+                        $("#ytbIFramePlaceholder").append("<iframe width='720' height='480' src='https://www.youtube.com/embed/" + getUrlParameterWithUri(post.ytbLink, "v") + "' frameborder='0'></iframe>");
+                    }
                     b64 = post.imgB64;
                     $.each(post.tags, function (idx, tag) {
                         $("#tag").tagsinput("add", tag.keyword);
@@ -104,11 +120,26 @@
             var text = $("#text").val();
             var category = $("#category :selected").val();
             var tags = $("#tag").tagsinput("items");
-            editPost(getUrlParameter("id"), title, text, category, tags);
+            if (title.length > 0 && text.length > 0 && validYtb) {
+                editPost(getUrlParameter("id"), title, text, category, tags, $("#ytbLink").val());
+            }
+            else alert("Please enter title, text and a valid (or none) YouTube Link.");
         });
         $("#btnDelete").click(function () {
             var conf = confirm("Do you really want to delete this post?");
             if (conf) deletePost(getUrlParameter("id"));
+        });
+        $('#ytbLink').on('input', function (e) {
+            var inp = $("#ytbLink").val();
+            validYtb = inp.length == 0;
+            var key = getUrlParameterWithUri(inp, "v");
+            if (key !== undefined) {
+                start(key);
+            }
+            else {
+                var text = $("#ytbLink").val().length == 0 ? "" : "Video not found";
+                $("#ytbTitle").html(text);
+            }
         });
 
         function checkID(id, key) {
@@ -122,6 +153,7 @@
                     $("#btnSave").prop("disabled", false);
                     $("#btnDelete").prop("disabled", false);
                     $("#btnEdit").prop("disabled", true);
+                    $("#ytbLink").prop("disabled", false);
                     userInputKey = key;
                     $("#editImgGroup").show();
                     $("#btnRemoveImage").show();
@@ -132,7 +164,32 @@
             })
         }
 
-        function editPost(id, title, text, category, tags) {
+        function start(key) {
+            // 2. Initialize the JavaScript client library.
+            gapi.client.init({
+                'apiKey': 'AIzaSyDHkJmly-UkzRJ-864R52NRS-aHGcmBRvM' // clientId and scope are optional if auth is not required.
+                    
+            , }).then(function () {
+                // 3. Initialize and make the API request.
+                return gapi.client.request({
+                    'path': "https://www.googleapis.com/youtube/v3/videos?id=" + key + "&key=AIzaSyAvobhiovnHsxB4sC8yh-dX6hopzw_JAPQ&part=snippet"
+                , })
+            }).then(function (response) {
+                if (response.result.items.length > 0) {
+                    $("#ytbTitle").html(response.result.items[0].snippet.title);
+                    validYtb = true;
+                }
+                else {
+                    var text = $("#ytbLink").val().length == 0 ? "" : "Video not found";
+                    $("#ytbTitle").html(text);
+                    validYtb = $("#ytbLink").val().length == 0;
+                }
+            }, function (reason) {
+                console.log('Error: ' + reason.result.error.message);
+            });
+        };
+
+        function editPost(id, title, text, category, tags, ytbLink) {
             if (userInputKey != "-1") {
                 var dat = JSON.stringify({
                     "id": id
@@ -142,6 +199,7 @@
                     , "title": title
                     , "category": category
                     , "imgB64": b64
+                    , "ytbLink": ytbLink
                 });
                 jQuery.ajax({
                     type: "PUT"
@@ -171,6 +229,18 @@
             }
             else alert("You somehow tricked the system.");
         }
+
+        function getUrlParameterWithUri(uri, sParam) {
+            var sPageURL = uri
+                , sURLVariables = sPageURL.split('?').splice("&")
+                , sParameterName, i;
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
 
         function getUrlParameter(sParam) {
             var sPageURL = decodeURIComponent(window.location.search.substring(1))

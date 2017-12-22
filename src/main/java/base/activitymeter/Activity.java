@@ -28,6 +28,7 @@ public class Activity {
 	private boolean valid;
 	@Column(length=1000000000)
 	private String imgB64;
+	private String ytbLink;
 
 	public String getImgB64() {
 		return imgB64;
@@ -44,12 +45,13 @@ public class Activity {
 
 	}
 
-	public Activity(long key, String text, String title, String category, String imgB64) {
+	public Activity(long key, String text, String title, String category, String imgB64, String ytbLink) {
 		this.key = key;
 		this.text = text;
 		this.title = title;
 		this.category = category;
 		this.imgB64 = imgB64;
+		this.ytbLink = ytbLink;
 		valid = false;
 	}
 
@@ -131,5 +133,13 @@ public class Activity {
 			}
 		}
 		return containsTag;
+	}
+
+	public String getYtbLink() {
+		return ytbLink;
+	}
+
+	public void setYtbLink(String ytbLink) {
+		this.ytbLink = ytbLink;
 	}
 }

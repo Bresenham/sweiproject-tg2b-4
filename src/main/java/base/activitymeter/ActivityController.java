@@ -105,6 +105,7 @@ public class ActivityController {
 				act.setText(input.getText());
 				act.setTitle(input.getTitle());
 				act.setCategory(input.getCategory());
+				act.setYtbLink(input.getYtbLink());
 				act.setImgB64(input.getImgB64());
 				if (input.getTags() != null) {
 					act.setTags(input.getTags());
@@ -156,6 +157,8 @@ public class ActivityController {
 			activity.setTitle(input.getTitle());
 			activity.setText(input.getText());
 			activity.setCategory(input.getCategory());
+			activity.setYtbLink(input.getYtbLink());
+			System.out.println(input.getYtbLink());
 			activity.setImgB64(input.getImgB64());
 			if(input.getTags() != null) {
 				for(Tag t : activity.getTags())
@@ -167,6 +170,7 @@ public class ActivityController {
 					tagRepository.save(new Tag(t.getKeyword(), activity));
 				}
 			}
+			activityRepository.save(activity);
 			return HttpStatus.OK;
 		}
 		return HttpStatus.NOT_FOUND;
@@ -184,7 +188,7 @@ public class ActivityController {
 			unique = (activityRepository.findIdByKey(key).isEmpty());
 		}
 
-		activityRepository.save(new Activity(key, "", "","",""));
+		activityRepository.save(new Activity(key, "", "","","",""));
 
 		ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
 
