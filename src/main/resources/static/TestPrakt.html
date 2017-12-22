@@ -131,7 +131,9 @@
             }).length;
             var b = Math.round(alpha * Math.sqrt(N));
             var phi = (Math.sqrt(alpha) + 1) / 2;
+            var angleCuts = (360.0 / (Object.keys(posts).length) + .5);
             $.each(Object.keys(posts), function (i, key) {
+                var angleInRad = (angleCuts * (i + 1)) * (Math.PI / 180.0);
                 $.each(posts[key], function (id, post) {
                     var idx = id + 1;
                     var r = radius(idx, N, b);
@@ -140,10 +142,8 @@
                     $.each(post.tags, function (indx, tag) {
                         tagStr += "#" + tag.keyword;
                     });
-                    var x = r * Math.cos(theta);
-                    var y = r * Math.sin(theta);
-                    if (i % 2 == 0) x += 5 * i;
-                    else y += 5 * i;
+                    var x = r * Math.cos(theta) + Math.sin(angleInRad) * (i + 1);
+                    var y = r * Math.sin(theta) + Math.cos(angleInRad) * (i + 1);
                     console.log("X: " + x + " Y: " + y);
                     data.push(makePlotlyObject(x, y, tagStr, post, 24));
                 });
