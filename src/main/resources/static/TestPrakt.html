@@ -156,10 +156,10 @@
             var N = $.map(posts, function (n, i) {
                 return i;
             }).length;
-            var angleCuts = (360.0 / (Object.keys(posts).length) + 1);
+            var angleCuts = (360.0 / ((Object.keys(posts).length)));
             console.log("Angle Cuts: " + angleCuts);
             $.each(Object.keys(posts), function (i, key) {
-                var angleInRad = (angleCuts * (i + 1)) * (Math.PI / 180.0);
+                var angleInRad = (angleCuts * i) * (Math.PI / 180.0);
                 var counter = 1;
                 data.push(makePlotlyObject(Math.sin(angleInRad) * 0.75, Math.cos(angleInRad) * 0.75, "Pointer", {
                     "category": "Points to "

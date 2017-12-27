@@ -125,7 +125,7 @@
         var validYtb = true;
         $(document).ready(function () {
             // 1. Load the JavaScript client library.
-            gapi.load('client', start);
+            gapi.load('client', checkYtb);
             $(".spinner").hide();
             $.get("/activity/getCategories", function (categories) {
                 $.each(categories, function (idx, category) {
@@ -144,7 +144,9 @@
             }
             else alert("Please enter ID, title, text and a valid (or none) YouTube link.");
         });
-        $('#ytbLink').on('input', function (e) {
+        $('#ytbLink').on('input', function (e) {});
+
+        function checkYtb() {
             var inp = $("#ytbLink").val();
             validYtb = inp.length == 0;
             var key = getUrlParameter(inp, "v");
@@ -152,10 +154,10 @@
                 start(key);
             }
             else {
-                var text = inp.length == 0 ? "" : "Video not found";
+                var text = validYtb ? "" : "Video not found";
                 $("#ytbTitle").html(text);
             }
-        });
+        }
 
         function start(key) {
             // 2. Initialize the JavaScript client library.
@@ -173,9 +175,9 @@
                     validYtb = true;
                 }
                 else {
-                    var text = $("#ytbLink").val().length == 0 ? "" : "Video not found";
-                    $("#ytbTitle").html(text);
                     validYtb = $("#ytbLink").val().length == 0;
+                    var text = validYtb ? "" : "Video not found";
+                    $("#ytbTitle").html(text);
                 }
             }, function (reason) {
                 console.log('Error: ' + reason.result.error.message);
