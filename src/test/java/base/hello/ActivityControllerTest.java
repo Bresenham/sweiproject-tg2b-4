@@ -24,4 +24,16 @@ public class ActivityControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    
+	@Test
+	public void testSend() throws Exception {
+        String json = "\"x@y.z\"";
+        this.mockMvc.perform(post("/SendMail").contentType(MediaType.APPLICATION_JSON).content(json)).andDo(print()).andExpect(status().isOk());  
+	}
+
+	@Test
+	public void testAdd1() throws Exception {
+        String json = "{\"key\": 123456,\"text\": \"hallo\",\"tags\": [\"t1\",\"t2\",\"t3\"],\"title\": \"titel\"}";
+        this.mockMvc.perform(post("/activity").contentType(MediaType.APPLICATION_JSON).content(json)).andDo(print()).andExpect(status().isOk());
+	}
 }
