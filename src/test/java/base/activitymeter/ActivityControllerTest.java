@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ActivityControllerTest {
 
+	private static int id = 0;
   @Autowired
   private MockMvc mockMvc;
 
@@ -50,7 +51,7 @@ public class ActivityControllerTest {
             .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
-    char id = response.getContentAsString().charAt(6);
+    id ++;
     mockMvc.perform(delete("/activity/" + id + "/999999"));
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
   }
@@ -72,10 +73,10 @@ public class ActivityControllerTest {
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
 
-    char id1 = response1.getContentAsString().charAt(6);
-    char id2 = response2.getContentAsString().charAt(6);
-    mockMvc.perform(delete("/activity/" + id1 + "/999999"));
-    mockMvc.perform(delete("/activity/" + id2 + "/999999"));
+    id ++;
+    mockMvc.perform(delete("/activity/" + id + "/999999"));
+    id ++;
+    mockMvc.perform(delete("/activity/" + id + "/999999"));
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
     mockMvc.perform(delete("/activity/test/removeKey/12346"));
   }
@@ -89,7 +90,7 @@ public class ActivityControllerTest {
             .content("{\"key\":\"12345\",\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
-    char id = response.getContentAsString().charAt(6);
+    id ++;
     mockMvc.perform(get("/activity/" + id)).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
@@ -104,7 +105,7 @@ public class ActivityControllerTest {
             .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
-    char id = response.getContentAsString().charAt(6);
+    id ++;
     mockMvc.perform(get("/activity/" + id + "/999999")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
@@ -119,7 +120,7 @@ public class ActivityControllerTest {
             .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
-    char id = response.getContentAsString().charAt(6);
+    id ++;
     mockMvc.perform(get("/activity/0")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
@@ -134,7 +135,7 @@ public class ActivityControllerTest {
             .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
-    char id = response.getContentAsString().charAt(6);
+    id ++;
     mockMvc.perform(delete("/activity/" + id + "/999999")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
   }
@@ -148,7 +149,7 @@ public class ActivityControllerTest {
             .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
-    char id = response.getContentAsString().charAt(6);
+    id ++;
     mockMvc.perform(put("/activity/" + id)
         .content("{\"key\":999999,\"title\":\"TestTest\",\"text\":\"test test\",\"tags\":\"test\"}")
         .contentType("application/json")).andExpect(status().isOk());
@@ -172,7 +173,7 @@ public class ActivityControllerTest {
             .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
-    char id = response.getContentAsString().charAt(6);
+    id ++;
     mockMvc.perform(get("/activity/listByTag/test")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
@@ -187,7 +188,7 @@ public class ActivityControllerTest {
             .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"category\":\"Students\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
-    char id = response.getContentAsString().charAt(6);
+    id ++;
     mockMvc.perform(get("/activity/listByCategory/Students")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
@@ -214,10 +215,10 @@ public class ActivityControllerTest {
 	  .andExpect(status().isOk());
       MockHttpServletResponse response = mockMvc.perform(post("/activity")
     		  .contentType(MediaType.APPLICATION_JSON)
-    		  .content(json)).andDo(print())
+    		  .content(json))
     		  .andExpect(status().isOk())
     		  .andReturn().getResponse();
-      char id = response.getContentAsString().charAt(6);
+      id ++;
     mockMvc.perform(delete("/activity/" + id + "/999999"));
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
 	}
