@@ -47,7 +47,7 @@ public class ActivityControllerTest {
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
-            .content("{\"key\":\"12345\",\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
+            .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
     char id = response.getContentAsString().charAt(6);
@@ -101,7 +101,7 @@ public class ActivityControllerTest {
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
-            .content("{\"key\":\"12345\",\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
+            .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
     char id = response.getContentAsString().charAt(6);
@@ -116,7 +116,7 @@ public class ActivityControllerTest {
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
-            .content("{\"key\":\"12345\",\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
+            .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
     char id = response.getContentAsString().charAt(6);
@@ -131,7 +131,7 @@ public class ActivityControllerTest {
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
-            .content("{\"key\":\"12345\",\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
+            .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
     char id = response.getContentAsString().charAt(6);
@@ -145,12 +145,12 @@ public class ActivityControllerTest {
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
-            .content("{\"key\":\"12345\",\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
+            .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
     char id = response.getContentAsString().charAt(6);
     mockMvc.perform(put("/activity/" + id)
-        .content("{\"key\":\"999999\",\"title\":\"TestTest\",\"text\":\"test test\",\"tags\":\"test\"}")
+        .content("{\"key\":999999,\"title\":\"TestTest\",\"text\":\"test test\",\"tags\":\"test\"}")
         .contentType("application/json")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
     mockMvc.perform(delete("/activity/test/removeKey/12345"));
@@ -159,7 +159,7 @@ public class ActivityControllerTest {
   @Test
   public void updateOneFailed() throws Exception {
     mockMvc.perform(put("/activity/" + 0)
-        .content("{\"key\":\"999999\",\"title\":\"TestTest\",\"text\":\"test test\",\"tags\":\"test\"}")
+        .content("{\"key\":999999,\"title\":\"TestTest\",\"text\":\"test test\",\"tags\":\"test\"}")
         .contentType("application/json")).andExpect(status().isOk());
   }
 
@@ -169,7 +169,7 @@ public class ActivityControllerTest {
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
-            .content("{\"key\":\"12345\",\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
+            .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
     char id = response.getContentAsString().charAt(6);
@@ -184,7 +184,7 @@ public class ActivityControllerTest {
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
-            .content("{\"key\":\"12345\",\"title\":\"Test\",\"text\":\"test test\",\"category\":\"Students\",\"tags\":\"test\"}")
+            .content("{\"key\":12345,\"title\":\"Test\",\"text\":\"test test\",\"category\":\"Students\",\"tags\":\"test\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
     char id = response.getContentAsString().charAt(6);
