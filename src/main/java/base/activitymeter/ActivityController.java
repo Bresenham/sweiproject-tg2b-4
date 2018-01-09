@@ -207,10 +207,10 @@ public class ActivityController {
 		return HttpStatus.OK;
 	}
 	
-	@RequestMapping(value="/activity/test/removeKey/{key}", method = RequestMethod.DELETE)
-	public HttpStatus removeKeyForTests(@PathVariable long key)
+	@RequestMapping(value="/activity/test/removeAll", method = RequestMethod.DELETE)
+	public HttpStatus removeKeyForTests()
 	{
-		activityRepository.delete(activityRepository.findIdByKey(key).get(0));
+		activityRepository.delete(activityRepository.findAll());;
 		return HttpStatus.OK;
 	}
 

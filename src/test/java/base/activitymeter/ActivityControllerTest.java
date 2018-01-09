@@ -53,7 +53,7 @@ public class ActivityControllerTest {
         .andExpect(status().isOk()).andReturn().getResponse();
     id ++;
     mockMvc.perform(delete("/activity/" + id + "/999999"));
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
   }
 
   @Test
@@ -77,8 +77,7 @@ public class ActivityControllerTest {
     mockMvc.perform(delete("/activity/" + id + "/999999"));
     id ++;
     mockMvc.perform(delete("/activity/" + id + "/999999"));
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
-    mockMvc.perform(delete("/activity/test/removeKey/12346"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
   }
 
   @Test
@@ -93,7 +92,7 @@ public class ActivityControllerTest {
     id ++;
     mockMvc.perform(get("/activity/" + id)).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
   }
   
   @Test
@@ -108,7 +107,7 @@ public class ActivityControllerTest {
     id ++;
     mockMvc.perform(get("/activity/" + id + "/999999")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
   }
 
   @Test
@@ -123,7 +122,7 @@ public class ActivityControllerTest {
     id ++;
     mockMvc.perform(get("/activity/0")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
   }
 
   @Test
@@ -137,7 +136,7 @@ public class ActivityControllerTest {
         .andExpect(status().isOk()).andReturn().getResponse();
     id ++;
     mockMvc.perform(delete("/activity/" + id + "/999999")).andExpect(status().isOk());
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
   }
 
   @Test
@@ -154,7 +153,7 @@ public class ActivityControllerTest {
         .content("{\"key\":999999,\"title\":\"TestTest\",\"text\":\"test test\",\"tags\":\"test\"}")
         .contentType("application/json")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
   }
 
   @Test
@@ -176,7 +175,7 @@ public class ActivityControllerTest {
     id ++;
     mockMvc.perform(get("/activity/listByTag/test")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
   }
 
   @Test
@@ -191,7 +190,7 @@ public class ActivityControllerTest {
     id ++;
     mockMvc.perform(get("/activity/listByCategory/Students")).andExpect(status().isOk());
     mockMvc.perform(delete("/activity/" + id + "/999999"));
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
   }
 
   @Test
@@ -220,7 +219,7 @@ public class ActivityControllerTest {
     		  .andReturn().getResponse();
       id ++;
     mockMvc.perform(delete("/activity/" + id + "/999999"));
-    mockMvc.perform(delete("/activity/test/removeKey/12345"));
+    mockMvc.perform(delete("/activity/test/removeAll"));
 	}
 
 }
