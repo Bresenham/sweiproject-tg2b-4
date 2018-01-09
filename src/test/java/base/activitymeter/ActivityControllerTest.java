@@ -42,7 +42,7 @@ public class ActivityControllerTest {
 
   @Test
   public void createOne() throws Exception {
-	  mockMvc.perform(post("activity/test/addKey/12345"))
+	  mockMvc.perform(post("/activity/test/addKey/12345"))
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
@@ -56,14 +56,14 @@ public class ActivityControllerTest {
 
   @Test
   public void createMultiple() throws Exception {
-	  mockMvc.perform(post("activity/test/addKey/12345"))
+	  mockMvc.perform(post("/activity/test/addKey/12345"))
 	  .andExpect(status().isOk());
     MockHttpServletResponse response1 = mockMvc
         .perform(post("/activity")
             .content("{\"title\":\"Test1\",\"text\":\"test test1\",\"tags\":\"test1\"}")
             .contentType("application/json"))
         .andExpect(status().isOk()).andReturn().getResponse();
-    mockMvc.perform(post("activity/test/addKey/12346"))
+    mockMvc.perform(post("/activity/test/addKey/12346"))
 	  .andExpect(status().isOk());
   MockHttpServletResponse response2 = mockMvc
         .perform(post("/activity")
@@ -81,7 +81,7 @@ public class ActivityControllerTest {
 
   @Test
   public void findOne() throws Exception {
-	  mockMvc.perform(post("activity/test/addKey/12345"))
+	  mockMvc.perform(post("/activity/test/addKey/12345"))
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
@@ -96,7 +96,7 @@ public class ActivityControllerTest {
   
   @Test
   public void findOneByAdminkey() throws Exception {
-	  mockMvc.perform(post("activity/test/addKey/12345"))
+	  mockMvc.perform(post("/activity/test/addKey/12345"))
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
@@ -111,7 +111,7 @@ public class ActivityControllerTest {
 
   @Test
   public void findOneFailed() throws Exception {
-	  mockMvc.perform(post("activity/test/addKey/12345"))
+	  mockMvc.perform(post("/activity/test/addKey/12345"))
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
@@ -126,7 +126,7 @@ public class ActivityControllerTest {
 
   @Test
   public void deleteOne() throws Exception {
-	  mockMvc.perform(post("activity/test/addKey/12345"))
+	  mockMvc.perform(post("/activity/test/addKey/12345"))
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
@@ -140,7 +140,7 @@ public class ActivityControllerTest {
 
   @Test
   public void updateOne() throws Exception {
-	  mockMvc.perform(post("activity/test/addKey/12345"))
+	  mockMvc.perform(post("/activity/test/addKey/12345"))
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
@@ -164,7 +164,7 @@ public class ActivityControllerTest {
 
   @Test
   public void findByTag() throws Exception {
-	  mockMvc.perform(post("activity/test/addKey/12345"))
+	  mockMvc.perform(post("/activity/test/addKey/12345"))
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
@@ -179,7 +179,7 @@ public class ActivityControllerTest {
 
   @Test
   public void findByCategory() throws Exception {
-	  mockMvc.perform(post("activity/test/addKey/12345"))
+	  mockMvc.perform(post("/activity/test/addKey/12345"))
 	  .andExpect(status().isOk());
     MockHttpServletResponse response = mockMvc
         .perform(post("/activity")
