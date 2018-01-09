@@ -1,5 +1,10 @@
+//[![Build status](https://travis-ci.org/sweIhm/sweiproject-tg2b-4.svg?branch=master)](https://travis-ci.org/sweIhm/sweiproject-tg2b-4) [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=org.springframework:tg2b4)](https://sonarcloud.io/dashboard/index/org.springframework:tg2b4)
+
 Beispielprojekt Activity Meter
 ==============================
+
+image:https://travis-ci.org/sweIhm/sweiproject-tg2b-4.svg?branch=master["Build Status", link="https://travis-ci.org/sweIhm/sweiproject-tg2b-4"]
+image:https://sonarcloud.io/api/badges/gate?key=org.springframework:tg2b4["Quality Gate", link="https://sonarcloud.io/dashboard/index/org.springframework:tg2b4"]
 
 This guide is based on a "hello world" link:/understanding/REST[RESTful web service] with Spring.
 
