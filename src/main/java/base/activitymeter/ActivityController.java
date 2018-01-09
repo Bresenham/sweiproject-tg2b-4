@@ -199,5 +199,19 @@ public class ActivityController {
 		return HttpStatus.OK;
 
 	}
+	
+	@RequestMapping(value="/activity/test/addKey/{key}", method = RequestMethod.POST)
+	public HttpStatus addKeyForTests(@PathVariable long key)
+	{
+		activityRepository.save(new Activity(key, "", "","","",""));
+		return HttpStatus.OK;
+	}
+	
+	@RequestMapping(value="/activity/test/removeKey/{key}", method = RequestMethod.DELETE)
+	public HttpStatus removeKeyForTests(@PathVariable long key)
+	{
+		activityRepository.delete(activityRepository.findIdByKey(key).get(0));
+		return HttpStatus.OK;
+	}
 
 }
