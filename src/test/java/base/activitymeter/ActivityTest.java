@@ -4,7 +4,10 @@ import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Date;
+import java.util.Calendar;
 
+import org.hibernate.tool.schema.extract.spi.ExtractionContext.DatabaseObjectAccess;
 import org.junit.Assert;
 
 import com.openpojo.reflection.PojoClass;
@@ -136,6 +139,29 @@ public class ActivityTest {
       // act
       sut.setTags(set);
       boolean have = sut.containsTag("Morgen");
+      // assert
+      Assert.assertEquals(want, have);
+  }
+  @Test(timeout = 1_000) public void activityNotOutdated() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
+      boolean want = false;
+      // act
+      boolean have = sut.checkIfOutdated();
+      // assert
+      Assert.assertEquals(want, have);
+  }
+  @Test(timeout = 1_000) public void activityOutdated() {
+      // arrange
+      Activity sut = new Activity(365, "A year is a long timespam, yet so short", "Year", "time","","");
+      Calendar testDate = Calendar.getInstance();
+      testDate.setTime(sut.getDateOfCreation());
+      testDate.add(Calendar.YEAR, -1);
+      testDate.add(Calendar.MONTH, -2);
+      sut.setDateOfCreation(testDate.getTime());
+      boolean want = true;
+      // act
+      boolean have = sut.checkIfOutdated();
       // assert
       Assert.assertEquals(want, have);
   }

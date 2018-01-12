@@ -1,6 +1,8 @@
 package base.activitymeter;
 
 import java.util.Set;
+import java.util.Date;
+import java.util.Calendar;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Entity
 @Table(name = "activity")
@@ -26,6 +30,7 @@ public class Activity {
 	private String title;
 	private String category;
 	private boolean valid;
+	private Date dateOfCreation; 
 	@Column(length=1000000000)
 	private String imgB64;
 	private String ytbLink;
@@ -53,6 +58,7 @@ public class Activity {
 		this.imgB64 = imgB64;
 		this.ytbLink = ytbLink;
 		valid = false;
+		dateOfCreation = new Date();
 	}
 
 	public long getId() {
@@ -96,6 +102,9 @@ public class Activity {
 	}
 
 	public boolean getValid() {
+		if (checkIfOutdated()){
+			setValid(false);
+		}
 		return valid;
 	}
 
@@ -142,4 +151,23 @@ public class Activity {
 	public void setYtbLink(String ytbLink) {
 		this.ytbLink = ytbLink;
 	}
+	public Date getDateOfCreation() {
+		return dateOfCreation;
+	}
+
+	public void setDateOfCreation(Date newDate) {
+		this.dateOfCreation = newDate;
+	}
+	public boolean checkIfOutdated(){
+		int yearsUntilOutdated = 1;
+		boolean isOutdated;
+		if(getDateOfCreation() != null){
+		Calendar post = Calendar.getInstance();
+		post.setTime(getDateOfCreation());
+		Calendar dDay = Calendar.getInstance();
+		dDay.add(Calendar.YEAR, -yearsUntilOutdated);
+		isOutdated = post.before(dDay);
+		} else { isOutdated = false;} 			//possible Exception for Posts that should stay longer
+		return isOutdated;
+	} 
 }
