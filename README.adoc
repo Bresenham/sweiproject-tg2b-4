@@ -8,4 +8,8 @@ image:https://sonarcloud.io/api/badges/gate?key=org.springframework:tg2b4["Quali
 
 image:https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/src/main/resources/static/logo.png["Logo", link="https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/src/main/resources/static/logo.png"]
 
-Web-Anwendungen zur Darstellung von Aktivitäten rund um Auslandsaufenthalte, Angebote und aktuelle Ereignisse. Das Frontend besteht aus HTML-Seiten mit JavaScript, als externe Bibliotheken kommen jQuery, Boostrap und plot.ly zum Einsatz.
+Web-Anwendungen zur Darstellung von Aktivitäten rund um Auslandsaufenthalte, Angebote und aktuelle Ereignisse.
+
+Das Frontend besteht aus HTML-Seiten mit JavaScript, als externe Bibliotheken kommen https://jquery.com/[jQuery], https://v4-alpha.getbootstrap.com/[Bootstrap] und https://plot.ly/[plot.ly] zum Einsatz. Mittels REST-API Requests werden Daten zwischen dem Frontend und dem Backend ausgetauscht. Im Backend kommt neben Java als Programmiersprache auch das Framework https://projects.spring.io/spring-boot/[Spring Boot] zum Einsatz. Mit Maven wird das Projekt automatisiert unter Eclipse gebuildet. Als Datenbank zum Speichern der Aktivitäten wird https://www.heroku.com/[Heroku] verwendet. Mittels Java Annotations im Backend gelingt die Verbindung zwischen Spring Boot und Heroku.
+
+Mehr Details über den Entwicklungsprozess erfahrt ihr https://sweihm.github.io/sweiproject-tg2b-4/[hier].
