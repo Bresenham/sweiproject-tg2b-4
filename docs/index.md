@@ -10,6 +10,6 @@ Entwicklung einer Webanwendungen zur Darstellung von Aktivitäten.
 
 ### Anwendungsfalldiagramm
 
-![:feelsgood:]({{ site.baseurl }}/blob/master/Project/Activity_Meter_Anwendungsfalldiagramm.png "Anwendungsfalldiagramm")
+<img src="https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/Project/Activity_Meter_Anwendungsfalldiagramm.png" alt="Anwendungsfalldiagramm" class="inline"/>
 
 :trollface:
