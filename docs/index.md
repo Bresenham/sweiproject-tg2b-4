@@ -6,10 +6,10 @@ Entwicklung einer Webanwendungen zur Darstellung von Aktivitäten.
 
 ### Systemarchitektur als Fachklassenmodell
 
-![alt text](https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/Project/Fachklassenmodel.png "Systemarchitektur")
+![:feelsgood:](https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/Project/Fachklassenmodel.png "Systemarchitektur")
 
 ### Anwendungsfalldiagramm
 
-![alt text](https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/Project/Activity_Meter_Anwendungsfalldiagramm.png "Anwendungsfalldiagramm")
+![:feelsgood:](https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/Project/Activity_Meter_Anwendungsfalldiagramm.png "Anwendungsfalldiagramm")
 
 :trollface:
