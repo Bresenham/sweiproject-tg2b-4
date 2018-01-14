@@ -7,3 +7,5 @@ image:https://travis-ci.org/sweIhm/sweiproject-tg2b-4.svg?branch=master["Build S
 image:https://sonarcloud.io/api/badges/gate?key=org.springframework:tg2b4["Quality Gate", link="https://sonarcloud.io/dashboard/index/org.springframework:tg2b4"]
 
 image:https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/src/main/resources/static/logo.png["Logo", link="https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/src/main/resources/static/logo.png"]
+
+Web-Anwendungen zur Darstellung von Aktivitäten rund um Auslandsaufenthalte, Angebote und aktuelle Ereignisse. Das Frontend besteht aus HTML-Seiten mit JavaScript, als externe Bibliotheken kommen jQuery, Boostrap und plot.ly zum Einsatz.
