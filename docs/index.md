@@ -6,7 +6,7 @@ Entwicklung einer Webanwendungen zur Darstellung von Aktivitäten.
 
 ### Systemarchitektur als Fachklassenmodell
 
-![:feelsgood:]({{ site.baseurl }}/blob/master/Project/Fachklassenmodel.png "Systemarchitektur")
+<img src="https://github.com/sweIhm/sweiproject-tg2b-4/blob/master/Project/Fachklassenmodel.png" alt="Fachklassenmodell" class="inline"/>
 
 ### Anwendungsfalldiagramm
 
