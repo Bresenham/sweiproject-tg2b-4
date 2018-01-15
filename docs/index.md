@@ -6,6 +6,7 @@ Entwicklung einer Webanwendungen zur Darstellung von Aktivitäten.
 
 ### Screenshots
 
+# Übersicht
 <img src="images/overview.PNG" alt="overview" class="inline"/>
 
 
