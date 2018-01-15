@@ -36,4 +36,11 @@ Nachfolgend kann man die ausführliche Darstellung einer Aktivität sehen.
 
 <img src="images/Activity_Meter_Anwendungsfalldiagramm.png" alt="Anwendungsfalldiagramm" class="inline"/>
 
+### Umsetzung
+
+Nachfolgend wird der Ablauf beim Erstellen eines neuen Posts per Sequenzdiagramm dargestellt.
+
+<img src="images/createPost.PNG" alt="createPost" class="inline"/>
+
+
 :trollface:
