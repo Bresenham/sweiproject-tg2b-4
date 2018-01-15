@@ -42,5 +42,8 @@ Nachfolgend wird der Ablauf beim Erstellen eines neuen Posts per Sequenzdiagramm
 
 <img src="images/createPost.PNG" alt="createPost" class="inline"/>
 
+Das editieren einer Aktivität wird folgendermaßen umgesetzt:
+
+<img src="images/editPost.PNG" alt="editPost" class="inline"/>
 
 :trollface:
