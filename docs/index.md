@@ -4,6 +4,8 @@ Entwicklung einer Webanwendungen zur Darstellung von Aktivitäten.
 
 [Link]: https://swei-tgb2-4.herokuapp.com/
 
+### Screenshots
+
 ### Systemarchitektur als Fachklassenmodell
 
 <img src="images/Fachklassenmodel.png" alt="Fachklassenmodell" class="inline"/>
