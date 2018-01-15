@@ -6,6 +6,9 @@ Entwicklung einer Webanwendungen zur Darstellung von Aktivitäten.
 
 ### Screenshots
 
+<img src="images/overview.png" alt="overview" class="inline"/>
+
+
 ### Systemarchitektur als Fachklassenmodell
 
 <img src="images/Fachklassenmodel.png" alt="Fachklassenmodell" class="inline"/>
