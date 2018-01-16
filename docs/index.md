@@ -46,4 +46,8 @@ Das editieren einer Aktivität wird folgendermaßen umgesetzt:
 
 <img src="images/editPost.PNG" alt="editPost" class="inline"/>
 
+Der Lebenszyklus eines Posts:
+
+<img src="images/zyklus.PNG" alt="zyklus" class="inline"/>
+
 :trollface:
